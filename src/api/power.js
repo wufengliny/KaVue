@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function fetchadminList(data) {
   return request({
-    url: 'http://localhost:8013/api/admin/pagelist',
+    url: '/api/admin/pagelist',
     method: 'post',
     data
   })
@@ -10,21 +10,21 @@ export function fetchadminList(data) {
 
 export function fetchadminGroupALL() {
   return request({
-    url: 'http://localhost:8013/api/AdminGroup/All',
+    url: '/api/AdminGroup/All',
     method: 'post'
   })
 }
 
 export function addAdminAccount(data) {
   return request({
-    url: 'http://localhost:8013/api/Admin',
+    url: '/api/Admin',
     method: 'post',
     data
   })
 }
 export function updateAdminAccount(data) {
   return request({
-    url: 'http://localhost:8013/api/Admin/Edit',
+    url: '/api/Admin/Edit',
     method: 'post',
     data
   })
@@ -32,7 +32,7 @@ export function updateAdminAccount(data) {
 
 export function updateAdminEnable(data) {
   return request({
-    url: 'http://localhost:8013/api/Admin/SetEnable',
+    url: '/api/Admin/SetEnable',
     method: 'post',
     data
   })
@@ -40,7 +40,7 @@ export function updateAdminEnable(data) {
 
 export function deleteAdmin(data) {
   return request({
-    url: 'http://localhost:8013/api/Admin/Delete',
+    url: '/api/Admin/Delete',
     method: 'post',
     data
   })
@@ -48,7 +48,7 @@ export function deleteAdmin(data) {
 
 export function fetchadminGroupList(data) {
   return request({
-    url: 'http://localhost:8013/api/AdminGroup/PageList',
+    url: '/api/AdminGroup/PageList',
     method: 'post',
     data
   })
@@ -56,7 +56,7 @@ export function fetchadminGroupList(data) {
 
 export function addAdminGroup(data) {
   return request({
-    url: 'http://localhost:8013/api/AdminGroup',
+    url: '/api/AdminGroup',
     method: 'post',
     data
   })
@@ -64,7 +64,7 @@ export function addAdminGroup(data) {
 
 export function updateAdminGroup(data) {
   return request({
-    url: 'http://localhost:8013/api/AdminGroup/Edit',
+    url: '/api/AdminGroup/Edit',
     method: 'post',
     data
   })
@@ -72,7 +72,7 @@ export function updateAdminGroup(data) {
 
 export function deleteAdminGroup(data) {
   return request({
-    url: 'http://localhost:8013/api/AdminGroup/Delete',
+    url: '/api/AdminGroup/Delete',
     method: 'post',
     data
   })
