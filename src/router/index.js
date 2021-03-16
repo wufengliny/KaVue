@@ -153,6 +153,33 @@ export const katestRoutes = [
     ]
   },
   {
+    path: '/log',
+    name: 'log',
+    component: Layout,
+    redirect: '/log/loglogin',
+    hidden: false,
+    meta: {
+      title: '日志管理',
+      icon: 'eye-open'
+    },
+    children: [
+      {
+        path: 'login',
+        component: () => import('@/views/log/login'),
+        name: 'log_login',
+        hidden: false,
+        meta: { title: '登陆日志', icon: '' } // meta菜单显示信息
+      },
+      {
+        path: 'request',
+        component: () => import('@/views/log/request'),
+        name: 'log_request',
+        hidden: false,
+        meta: { title: '请求日志', icon: '' }
+      }
+    ]
+  },
+  {
     path: '/test',
     name: 'test',
     component: Layout,

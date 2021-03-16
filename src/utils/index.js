@@ -52,14 +52,17 @@ export function parseTime(time, cFormat) {
 }
 
 /**
- * @param {string} time  如何时间含有T则替换成空格
- * @param {string} format
+ * @param {string} time 时间对象new Date() 或者时间字符串  如何时间含有T则替换成空格
+ * @param {string} format  {y}-{m}-{d} {h}:{i}:{s}
  * @returns {string}
  */
 export function formatTime(date, format) {
-  const reg = new RegExp('T', 'g')
-  const newTime = date.replace(reg, ' ') // 如果含有T则将T替换成‘ ’
-  date = new Date(newTime)
+  let tempdate = date.toString()
+  if (tempdate.indexOf('GMT') < 0) {
+    const reg = new RegExp('T', 'g')
+    tempdate = tempdate.replace(reg, ' ') // 如果含有T则将T替换成‘ ’
+  }
+  date = new Date(tempdate)
   const formatObj = {
     y: date.getFullYear(),
     m: date.getMonth() + 1,
@@ -76,6 +79,55 @@ export function formatTime(date, format) {
     return value.toString().padStart(2, '0')
   })
   return time_str
+}
+
+export function dateVal() {
+  const now = new Date()
+  const wday = now.getDay()
+  const dateinfo = {
+    day_start: formatTime(dayAdd(0), '{y}-{m}-{d}' + ' 00:00:00'),
+    day_end: formatTime(dayAdd(0), '{y}-{m}-{d}' + ' 23:59:59'),
+    preday_start: formatTime(dayAdd(-1), '{y}-{m}-{d}' + ' 00:00:00'),
+    preday_end: formatTime(dayAdd(-1), '{y}-{m}-{d}' + ' 23:59:59'),
+    pre2day_start: formatTime(dayAdd(-2), '{y}-{m}-{d}' + ' 00:00:00'),
+    pre2day_end: formatTime(dayAdd(-2), '{y}-{m}-{d}' + ' 23:59:59'),
+    week_start: formatTime(dayAdd(-wday + 1), '{y}-{m}-{d}' + ' 00:00:00'),
+    week_end: formatTime(dayAdd(7 - wday), '{y}-{m}-{d}' + ' 23:59:59'),
+    preweek_start: formatTime(dayAdd(-wday + 1 - 7), '{y}-{m}-{d}' + ' 00:00:00'),
+    preweek_end: formatTime(dayAdd(-wday), '{y}-{m}-{d}' + ' 23:59:59'),
+    month_start: formatTime(getMonthstart(0), '{y}-{m}-{d}' + ' 00:00:00'),
+    month_end: formatTime(getMonthEnd(0), '{y}-{m}-{d}' + ' 23:59:59'),
+    premonth_start: formatTime(getMonthstart(-1), '{y}-{m}-{d}' + ' 00:00:00'),
+    premonth_end: formatTime(getMonthEnd(-1), '{y}-{m}-{d}' + ' 23:59:59')
+  }
+  return dateinfo
+}
+
+function dayAdd(gap) {
+  let date = new Date()
+  date = date.getTime() + 1000 * 60 * 60 * 24 * gap
+  const temp = new Date()
+  temp.setTime(date)
+  return temp
+}
+// https://blog.csdn.net/gongpan2468/article/details/85782304
+function getMonthstart(gap) {
+  const date1 = new Date()
+  const gapMonth = date1.getMonth() + gap
+  const gapMonthFirstDay = new Date(date1.getFullYear(), gapMonth, 1)
+  return gapMonthFirstDay
+}
+
+// gap=0 当月 1 下月 -2 上月
+function getMonthEnd(gap) {
+  const date1 = new Date()
+  let gapMonth = date1.getMonth()
+  gapMonth = gapMonth + 1 + gap
+  let NextMonthFirstDay = new Date(date1.getFullYear(), gapMonth, 1)
+  NextMonthFirstDay = NextMonthFirstDay.getTime() - 1000 * 60 * 60 * 24
+  const temp = new Date()
+  temp.setTime(NextMonthFirstDay)
+  return temp
 }
 
 /**
