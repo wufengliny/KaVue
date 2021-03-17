@@ -29,3 +29,17 @@ export function logrequestDetail(data) {
     data
   })
 }
+export function logerrortList(data) {
+  return request({
+    url: '/api/LogError/PageList',
+    method: 'post',
+    data
+  })
+}
+export function logerrorDetail(data) {
+  return request({
+    url: '/api/LogError/GetByID',
+    method: 'post',
+    data
+  })
+}

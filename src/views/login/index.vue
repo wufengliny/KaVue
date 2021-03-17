@@ -139,7 +139,7 @@ export default {
           this.loading = true
           this.$store.dispatch('user/login', this.loginForm)
             .then(() => {
-              this.$router.push({ path: '/dashboard' || '/', query: this.otherQuery })
+              this.$router.push({ path: '/' || '/', query: this.otherQuery })
               this.loading = false
             })
             .catch(() => {

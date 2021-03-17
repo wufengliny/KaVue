@@ -21,8 +21,6 @@
 </template>
 
 <script>
-import { transactionList } from '@/api/remote-search'
-
 export default {
   filters: {
     statusFilter(status) {
@@ -46,9 +44,6 @@ export default {
   },
   methods: {
     fetchData() {
-      transactionList().then(response => {
-        this.list = response.data.items.slice(0, 8)
-      })
     }
   }
 }

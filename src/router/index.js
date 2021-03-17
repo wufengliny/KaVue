@@ -67,41 +67,17 @@ export const constantRoutes = [
     hidden: true
   },
   {
-    path: '/documentation',
+    path: '/',
     component: Layout,
+    hidden: false,
+    redirect: '/dashboard',
     children: [
       {
-        path: 'index',
-        component: () => import('@/views/documentation/index'),
-        name: 'Documentation',
-        meta: { title: 'Documentation', icon: 'documentation', affix: true }
-      }
-    ]
-  },
-  {
-    path: '/guide',
-    component: Layout,
-    redirect: '/guide/index',
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/guide/index'),
-        name: 'Guide',
-        meta: { title: 'Guide', icon: 'guide', noCache: true }
-      }
-    ]
-  },
-  {
-    path: '/profile',
-    component: Layout,
-    redirect: '/profile/index',
-    hidden: true,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/profile/index'),
-        name: 'Profile',
-        meta: { title: 'Profile', icon: 'user', noCache: true }
+        path: 'dashboard',
+        component: () => import('@/views/dashboard/index'),
+        name: 'Dashboard',
+        hidden: false,
+        meta: { title: '主页', icon: 'dashboard', affix: true }
       }
     ]
   }
@@ -110,21 +86,6 @@ export const constantRoutes = [
 // affix:  bool 标签栏是否固定 即打开后该导航的右边是否会有一个*关掉的小按钮
 // redirect:面包屑导航中点击跳转的地址
 export const katestRoutes = [
-  {
-    path: '/',
-    component: Layout,
-    name: 'hthome',
-    hidden: false,
-    children: [
-      {
-        path: 'Dashboard',
-        component: () => import('@/views/dashboard/index'),
-        name: 'child_hthome',
-        hidden: false,
-        meta: { title: '主页', icon: 'dashboard', affix: true }
-      }
-    ]
-  },
   {
     path: '/power',
     name: 'power',
@@ -141,14 +102,14 @@ export const katestRoutes = [
         component: () => import('@/views/power/admin'),
         name: 'power_admin',
         hidden: false,
-        meta: { title: '管理员', icon: '' } // meta菜单显示信息
+        meta: { title: '管理员', icon: '', noCache: true } // meta菜单显示信息  不管用
       },
       {
         path: 'Adg',
         component: () => import('@/views/power/adg'),
         name: 'power_admingroup',
         hidden: false,
-        meta: { title: '管理员组', icon: '' }
+        meta: { title: '管理员组', icon: '', noCache: true }
       }
     ]
   },
@@ -156,7 +117,7 @@ export const katestRoutes = [
     path: '/log',
     name: 'log',
     component: Layout,
-    redirect: '/log/loglogin',
+    redirect: '/log/login',
     hidden: false,
     meta: {
       title: '日志管理',
@@ -168,7 +129,7 @@ export const katestRoutes = [
         component: () => import('@/views/log/login'),
         name: 'log_login',
         hidden: false,
-        meta: { title: '登陆日志', icon: '' } // meta菜单显示信息
+        meta: { title: '登陆日志', icon: '', noCache: false } // meta菜单显示信息
       },
       {
         path: 'request',
@@ -176,6 +137,13 @@ export const katestRoutes = [
         name: 'log_request',
         hidden: false,
         meta: { title: '请求日志', icon: '' }
+      },
+      {
+        path: 'error',
+        component: () => import('@/views/log/error'),
+        name: 'log_error',
+        hidden: false,
+        meta: { title: '错误日志', icon: '' }
       }
     ]
   },
@@ -205,7 +173,8 @@ export const katestRoutes = [
         meta: { title: '测试二', icon: '' }
       }
     ]
-  }
+  },
+  { path: '*', redirect: '/404', hidden: true }
 ]
 const createRouter = () => new Router({
   // mode: 'history', // require service support
