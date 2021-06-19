@@ -7,7 +7,7 @@ import { getToken } from '@/utils/auth'
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
-  timeout: 5000 // request timeout
+  timeout: 25000 // request timeout
 })
 
 // request interceptor
@@ -45,6 +45,7 @@ service.interceptors.response.use(
   response => {
     const res = response.data
     // 1 成功 2 请求错误（如参数数据错误） 3：系统错误：返回错误编码  4 未登录,或者账号被挤掉需要重新登陆 5权限不足 6Token过期
+    // 7 频繁操作 饭不提醒用户 8 频繁操作提示用户
     if (res.Statu === 1) {
       return res
     }
@@ -52,12 +53,20 @@ service.interceptors.response.use(
       Message({
         message: res.Message || 'Error',
         type: 'error',
-        duration: 5 * 1000
+        duration: 2 * 1000
       })
       return Promise.reject(new Error(res.Message || 'Error'))
     }
     if (res.Statu === 4) {
-      console.log(66)
+      MessageBox.confirm(res.Message, {
+        confirmButtonText: '重新登陆',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        store.dispatch('login/resetToken').then(() => {
+          location.reload()
+        })
+      })
     }
     if (res.Statu === 6) {
       MessageBox.confirm('登陆权限已过期，请重新登陆', '权限过期', {
@@ -65,7 +74,7 @@ service.interceptors.response.use(
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        store.dispatch('user/resetToken').then(() => {
+        store.dispatch('login/resetToken').then(() => {
           location.reload()
         })
       })

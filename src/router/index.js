@@ -39,10 +39,12 @@ export const constantRoutes = [
     path: '/redirect',
     component: Layout,
     hidden: true,
+    name: 'Redirect',
     children: [
       {
         path: '/redirect/:path(.*)',
-        component: () => import('@/views/redirect/index')
+        component: () => import('@/views/redirect/index'),
+        meta: { noCache: true }
       }
     ]
   },
@@ -69,15 +71,29 @@ export const constantRoutes = [
   {
     path: '/',
     component: Layout,
-    hidden: false,
+    hidden: true,
     redirect: '/dashboard',
     children: [
       {
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
-        hidden: false,
+        hidden: true,
         meta: { title: '主页', icon: 'dashboard', affix: true }
+      }
+    ]
+  },
+  {
+    path: '/profile',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/profile/index'),
+        name: 'profile',
+        hidden: true,
+        meta: { title: '个人中心' }
       }
     ]
   }
@@ -87,8 +103,83 @@ export const constantRoutes = [
 // redirect:面包屑导航中点击跳转的地址
 export const katestRoutes = [
   {
+    path: '/user',
+    name: 'User',
+    component: Layout,
+    redirect: '/user/users',
+    hidden: false,
+    meta: {
+      title: '会员管理',
+      icon: 'peoples'
+    },
+    children: [
+      {
+        path: 'users',
+        component: () => import('@/views/user/users'),
+        name: 'Users',
+        hidden: false,
+        meta: { title: '会员信息', icon: '', noCache: false } // meta菜单显示信息  不管用
+      },
+      {
+        path: 'usergroups',
+        component: () => import('@/views/user/usergroups'),
+        name: 'UserGroups',
+        hidden: false,
+        meta: { title: '会员组别', icon: '', noCache: false }
+      }
+    ]
+  },
+  {
+    path: '/eat',
+    name: 'Eat',
+    component: Layout,
+    redirect: '/Eat/Current',
+    hidden: false,
+    meta: {
+      title: '点餐系统',
+      icon: 'peoples'
+    },
+    children: [
+      {
+        path: 'Current',
+        component: () => import('@/views/eat/Current'),
+        name: 'EatCurrent',
+        hidden: false,
+        meta: { title: '我要点餐', icon: '', noCache: false } // meta菜单显示信息  不管用
+      },
+      {
+        path: 'Acivity',
+        component: () => import('@/views/eat/Acivity'),
+        name: 'EatAcivity',
+        hidden: false,
+        meta: { title: '点餐活动', icon: '', noCache: false }
+      },
+      {
+        path: 'OrderList',
+        component: () => import('@/views/eat/OrderList'),
+        name: 'EatOrderList',
+        hidden: false,
+        meta: { title: '历史订单', icon: '', noCache: false }
+      },
+      {
+        path: 'ShopList',
+        component: () => import('@/views/eat/ShopList'),
+        name: 'EatShopList',
+        hidden: false,
+        meta: { title: '商家管理', icon: '', noCache: false }
+      },
+      {
+        path: 'Rank',
+        component: () => import('@/views/eat/Rank'),
+        name: 'EatRank',
+        hidden: false,
+        meta: { title: '榜上英雄', icon: '', noCache: false }
+      }
+    ]
+  },
+  {
     path: '/power',
-    name: 'power',
+    name: 'Power',
     component: Layout,
     redirect: '/power/admin',
     hidden: false,
@@ -100,22 +191,22 @@ export const katestRoutes = [
       {
         path: 'admin',
         component: () => import('@/views/power/admin'),
-        name: 'power_admin',
+        name: 'PowerAdmin',
         hidden: false,
-        meta: { title: '管理员', icon: '', noCache: true } // meta菜单显示信息  不管用
+        meta: { title: '管理员', icon: '', noCache: false } // meta菜单显示信息  不管用
       },
       {
-        path: 'Adg',
-        component: () => import('@/views/power/adg'),
-        name: 'power_admingroup',
+        path: 'PowerAdmingroup',
+        component: () => import('@/views/power/PowerAdmingroup'),
+        name: 'PowerAdmingroup',
         hidden: false,
-        meta: { title: '管理员组', icon: '', noCache: true }
+        meta: { title: '管理员组', icon: '', noCache: false }
       }
     ]
   },
   {
     path: '/log',
-    name: 'log',
+    name: 'Log',
     component: Layout,
     redirect: '/log/login',
     hidden: false,
@@ -127,29 +218,81 @@ export const katestRoutes = [
       {
         path: 'login',
         component: () => import('@/views/log/login'),
-        name: 'log_login',
+        name: 'LogLogin',
         hidden: false,
         meta: { title: '登陆日志', icon: '', noCache: false } // meta菜单显示信息
       },
       {
         path: 'request',
         component: () => import('@/views/log/request'),
-        name: 'log_request',
+        name: 'LogRequest',
         hidden: false,
         meta: { title: '请求日志', icon: '' }
       },
       {
         path: 'error',
         component: () => import('@/views/log/error'),
-        name: 'log_error',
+        name: 'LogError',
         hidden: false,
         meta: { title: '错误日志', icon: '' }
       }
     ]
   },
   {
+    path: '/config',
+    name: 'Config',
+    component: Layout,
+    hidden: false,
+    meta: {
+      title: '参数配置',
+      icon: 'nested'
+    },
+    children: [
+      {
+        path: 'sysconfig',
+        component: () => import('@/views/config/sysconfig'),
+        name: 'ConfigSysConfig',
+        hidden: false,
+        meta: { title: '系统参数', icon: '' } // meta菜单显示信息
+      }
+    ]
+  },
+  {
+    path: '/game',
+    name: 'Game',
+    component: Layout,
+    hidden: true,
+    meta: {
+      title: '彩票管理',
+      icon: 'example'
+    },
+    children: [
+      {
+        path: 'gamelist',
+        component: () => import('@/views/game/gamelist'),
+        name: 'GameList',
+        hidden: true,
+        meta: { title: '开关维护设置', icon: '' } // meta菜单显示信息
+      },
+      {
+        path: 'gamerate',
+        component: () => import('@/views/game/gamerate'),
+        name: 'GameGameRateList',
+        hidden: true,
+        meta: { title: '赔率反水设置', icon: '' } // meta菜单显示信息
+      },
+      {
+        path: 'openresult',
+        component: () => import('@/views/game/openresult'),
+        name: 'GameCPOpenResult',
+        hidden: true,
+        meta: { title: '彩票开奖结果', icon: '' } // meta菜单显示信息
+      }
+    ]
+  },
+  {
     path: '/test',
-    name: 'test',
+    name: 'Test',
     component: Layout,
     redirect: '/test/index',
     hidden: false,
@@ -161,14 +304,14 @@ export const katestRoutes = [
       {
         path: 'index',
         component: () => import('@/views/test/index'),
-        name: 'test_one',
+        name: 'TestOne',
         hidden: false,
         meta: { title: '测试一', icon: '' } // meta菜单显示信息
       },
       {
         path: 'Adg',
         component: () => import('@/views/test/adg'),
-        name: 'test_two',
+        name: 'TestTwo',
         hidden: false,
         meta: { title: '测试二', icon: '' }
       }

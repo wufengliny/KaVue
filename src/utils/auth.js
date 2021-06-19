@@ -1,3 +1,4 @@
+// https://blog.csdn.net/qq_20802379/article/details/81436634
 import Cookies from 'js-cookie'
 
 const TokenKey = 'Admin-Token'
@@ -7,7 +8,7 @@ export function getToken() {
 }
 
 export function setToken(token) {
-  return Cookies.set(TokenKey, token)
+  return Cookies.set(TokenKey, token, { expires: 1 })
 }
 
 export function removeToken() {

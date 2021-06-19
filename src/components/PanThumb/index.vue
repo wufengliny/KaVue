@@ -6,7 +6,7 @@
       </div>
     </div>
     <!-- eslint-disable-next-line -->
-    <div :style="{backgroundImage: `url(${image})`}" class="pan-thumb"></div>
+    <div class="pan-thumb"></div>
   </div>
 </template>
 
@@ -14,10 +14,6 @@
 export default {
   name: 'PanThumb',
   props: {
-    image: {
-      type: String,
-      required: true
-    },
     zIndex: {
       type: Number,
       default: 1
@@ -60,6 +56,7 @@ export default {
   position: absolute;
   transform-origin: 95% 40%;
   transition: all 0.3s ease-in-out;
+  background-image:url('~@/assets/Other_images/adminheader.gif') ;
 }
 
 /* .pan-thumb:after {

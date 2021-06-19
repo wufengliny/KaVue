@@ -5,7 +5,7 @@
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
       </el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
+      <el-button v-if="checkbuttonPermission('PowerAdminAdd')" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreate">
         添加
       </el-button>
     </div>
@@ -36,7 +36,7 @@
           <span>{{ scope.row.LastLoginTime | formatTime('{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="登陆次数">
+      <el-table-column align="center" width="90" label="登陆次数">
         <template slot-scope="scope">
           <span>{{ scope.row.LoginCount }}</span>
         </template>
@@ -48,19 +48,22 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
-        <template slot-scope="{row, $index}">
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">
+      <el-table-column label="操作" align="center" width="300" class-name="small-padding fixed-width">
+        <template v-if="row.ID!=1" slot-scope="{row, $index}">
+          <el-button v-if="checkbuttonPermission('PowerAdminEdit')" type="primary" size="mini" @click="handleUpdate(row)">
             编辑
           </el-button>
-          <el-button v-if="row.Enable === 2" size="mini" type="success" @click="updateEnable(row, 1)">
+          <el-button v-if="checkbuttonPermission('PowerAdminEnable')&&row.Enable === 2" size="mini" type="success" @click="updateEnable(row, 1)">
             启用
           </el-button>
-          <el-button v-if="row.Enable === 1" size="mini" type="info" @click="updateEnable(row, 2)">
+          <el-button v-if="checkbuttonPermission('PowerAdminEnable')&&row.Enable === 1" size="mini" type="info" @click="updateEnable(row, 2)">
             禁用
           </el-button>
-          <el-button size="mini" type="danger" @click="deleteData(row, $index)">
+          <el-button v-if="checkbuttonPermission('PowerAdminDelete')" size="mini" type="danger" @click="deleteData(row, $index)">
             删除
+          </el-button>
+          <el-button v-if="checkbuttonPermission('PowerAdminSetGoogleAuthCode')" type="warning" size="mini" @click="Opendialoggoogle(row)">
+            谷歌
           </el-button>
         </template>
       </el-table-column>
@@ -89,19 +92,26 @@
           取消
         </el-button>
         <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">
-          确定
+          保存
         </el-button>
       </div>
     </el-dialog>
+    <google
+      :showgoogledialog.sync="dialogGooglepropData.showgoogledialog"
+      :adminid="dialogGooglepropData.adminID"
+      @hidedialoggoogle="hidedialoggoogle"
+    />
   </div>
 </template>
 <script>
 import { fetchadminList, fetchadminGroupALL, addAdminAccount, updateAdminAccount, updateAdminEnable, deleteAdmin } from '@/api/power'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import { MessageBox } from 'element-ui'
+import Google from './components/Google'
+import { checkbuttonPermission } from '@/utils/permission'
 export default {
-  name: 'Admin',
-  components: { Pagination },
+  name: 'PowerAdmin',
+  components: { Pagination, Google },
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -147,7 +157,11 @@ export default {
       passwordType: 'password',
       pwdplaceholder: '请输入密码！',
       temppwd: '',
-      accountReadonly: false
+      accountReadonly: false,
+      dialogGooglepropData: {
+        showgoogledialog: false,
+        adminID: 0
+      }
     }
   },
   created() {
@@ -258,6 +272,13 @@ export default {
         this.$refs['dataForm'].clearValidate()
       })
     },
+    Opendialoggoogle(row) {
+      this.dialogGooglepropData.showgoogledialog = true
+      this.dialogGooglepropData.adminID = row.ID
+    },
+    hidedialoggoogle() {
+      this.dialogGooglepropData.showgoogledialog = false
+    },
     resetTemp() {
       this.temp = {
         id: 0,
@@ -266,7 +287,8 @@ export default {
         memo: '',
         adminGroupID: ''
       }
-    }
+    },
+    checkbuttonPermission
   }
 }
 </script>

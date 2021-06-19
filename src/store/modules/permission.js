@@ -1,43 +1,11 @@
 import { katestRoutes } from '@/router'
 import { getMenus } from '@/api/role'
-/**
- * Use meta.role to determine if the current user has permission
- * @param roles
- * @param route
- */
-function hasPermission(roles, route) {
-  if (route.meta && route.meta.roles) {
-    return roles.some(role => route.meta.roles.includes(role))
-  } else {
-    return true
-  }
-}
-
-/**
- * Filter asynchronous routing tables by recursion
- * @param routes asyncRoutes
- * @param roles
- */
-export function filterAsyncRoutes(routes, roles) {
-  const res = []
-
-  routes.forEach(route => {
-    const tmp = { ...route }
-    if (hasPermission(roles, tmp)) {
-      if (tmp.children) {
-        tmp.children = filterAsyncRoutes(tmp.children, roles)
-      }
-      res.push(tmp)
-    }
-  })
-
-  return res
-}
-
+import store from '@/store'
 const state = {
   routes: [],
   addRoutes: [],
-  isSetmenu: false
+  isSetmenu: false,
+  buttons: []
 }
 
 const mutations = {
@@ -47,6 +15,9 @@ const mutations = {
   },
   SET_ISSET: (state, isSetmenu) => {
     state.isSetmenu = isSetmenu
+  },
+  SET_BUTTON: (state, button) => {
+    state.buttons = button
   }
 }
 
@@ -82,7 +53,11 @@ const actions = {
             accessedRoutes[index].hidden = true
           }
         }
+        // 取出所有的按钮
+        const msbutton = ms.filter(x => x.MenuType === 'Button')
+        commit('SET_BUTTON', msbutton)
       })
+      store.dispatch('login/admininfo')
       commit('SET_ROUTES', accessedRoutes)
       commit('SET_ISSET', true)
       resolve(accessedRoutes)

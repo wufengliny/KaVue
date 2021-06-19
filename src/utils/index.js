@@ -57,6 +57,9 @@ export function parseTime(time, cFormat) {
  * @returns {string}
  */
 export function formatTime(date, format) {
+  if (format === '') {
+    format = '{y}-{m}-{d} {h}:{i}:{s}'
+  }
   let tempdate = date.toString()
   if (tempdate.indexOf('GMT') < 0) {
     const reg = new RegExp('T', 'g')
@@ -83,7 +86,11 @@ export function formatTime(date, format) {
 
 export function dateVal() {
   const now = new Date()
-  const wday = now.getDay()
+  // (0 = Sunday, 1 = Monday, 2 = Tuesday, 3 = Wednesday, 4 = Thursday, 5 = Friday, 6 = Saturday);
+  let wday = now.getDay()
+  if (wday === 0) {
+    wday = 7
+  }
   const dateinfo = {
     day_start: formatTime(dayAdd(0), '{y}-{m}-{d}' + ' 00:00:00'),
     day_end: formatTime(dayAdd(0), '{y}-{m}-{d}' + ' 23:59:59'),

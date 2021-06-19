@@ -77,3 +77,51 @@ export function deleteAdminGroup(data) {
     data
   })
 }
+
+export function menusAll(data) {
+  return request({
+    url: '/api/Menu/All',
+    method: 'post',
+    data
+  })
+}
+
+export function menuspowerupdate(data) {
+  return request({
+    url: '/api/Menu/UpdatePowers',
+    method: 'post',
+    data
+  })
+}
+
+export function MakeGoogleKey() {
+  return request({
+    url: '/api/Other/MakeGoogleKey',
+    method: 'post'
+  })
+}
+
+export function UpdateGoogleKey(data) {
+  return request({
+    url: '/api/Admin/SetGoogleAuthCode',
+    method: 'post',
+    data
+  })
+}
+
+export function LookMyGoogleKey(data) {
+  return request({
+    url: '/api/Other/MyGoogleKey',
+    method: 'post',
+    data
+  })
+}
+
+export function UpdateMyGoogleKey(data) {
+  return request({
+    url: '/api/Other/UpdateGoogleAuthCode',
+    method: 'post',
+    data
+  })
+}
+

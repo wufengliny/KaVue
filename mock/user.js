@@ -45,17 +45,5 @@ module.exports = [
         data: token
       }
     }
-  },
-  
-  // user logout
-  {
-    url: '/vue-element-admin/user/logout',
-    type: 'post',
-    response: _ => {
-      return {
-        statu: 1,
-        data: 'success'
-      }
-    }
   }
 ]

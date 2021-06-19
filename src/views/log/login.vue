@@ -11,15 +11,7 @@
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
       </el-button>
-      <el-button class="filter-item" type="default" @click="setQueryTimetoday()">
-        今天
-      </el-button>
-      <el-button class="filter-item" type="default" @click="setQueryTimePre()">
-        昨天
-      </el-button>
-      <el-button class="filter-item" type="default" @click="setQueryTimepreweek()">
-        上周
-      </el-button>
+      <quick-time @queryByButtonTime="queryByButtonTime" />
     </div>
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" label="ID" width="80">
@@ -62,7 +54,7 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
-          <el-button type="default" size="mini" @click="handleDetail(row)">
+          <el-button v-if="checkbuttonPermission('LogLoginDetail')" type="default" size="mini" @click="handleDetail(row)">
             详细
           </el-button>
         </template>
@@ -83,10 +75,12 @@
 <script>
 import { logloginList, logloginDetail } from '@/api/log'
 import { dateVal } from '@/utils/index'
+import QuickTime from '@/components/QuickTime'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+import { checkbuttonPermission } from '@/utils/permission'
 export default {
-  name: 'Login',
-  components: { Pagination },
+  name: 'LogLogin',
+  components: { Pagination, QuickTime },
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -133,6 +127,7 @@ export default {
     this.initTime()
   },
   methods: {
+    checkbuttonPermission,
     getList() {
       this.listLoading = true
       logloginList(this.listQuery).then(response => {
@@ -140,6 +135,11 @@ export default {
         this.total = response.Pageinfo.TotalCount
         this.listLoading = false
       })
+    },
+    queryByButtonTime(data) {
+      this.listQuery.loginTime_begin = data.begin
+      this.listQuery.loginTime_end = data.end
+      this.handleFilter()
     },
     handleFilter() {
       this.listQuery.page = 1
@@ -165,21 +165,6 @@ export default {
         this.listQuery.loginTime_begin = dateVal().day_start
         this.listQuery.loginTime_end = dateVal().day_end
       }
-    },
-    setQueryTimePre() {
-      this.listQuery.loginTime_begin = dateVal().preday_start
-      this.listQuery.loginTime_end = dateVal().preday_end
-      this.handleFilter()
-    },
-    setQueryTimetoday() {
-      this.listQuery.loginTime_begin = dateVal().day_start
-      this.listQuery.loginTime_end = dateVal().day_end
-      this.handleFilter()
-    },
-    setQueryTimepreweek() {
-      this.listQuery.loginTime_begin = dateVal().preweek_start
-      this.listQuery.loginTime_end = dateVal().preweek_end
-      this.handleFilter()
     }
   }
 }

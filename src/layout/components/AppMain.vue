@@ -1,8 +1,10 @@
 <template>
   <section class="app-main">
     <transition name="fade-transform" mode="out-in">
-      <keep-alive>
+      <keep-alive :include="cachedViews">
         <router-view :key="key" />
+        <!-- 包裹起来的这部分数据会缓存 -->
+        <!-- <keep-alive :include="cachedViews">    -->
         <!-- <router-view /> exclude include path name  :exclude="cachedViews" -->
       </keep-alive>
     </transition>

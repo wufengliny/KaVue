@@ -19,3 +19,11 @@ export default function checkPermission(value) {
     return false
   }
 }
+export function checkbuttonPermission(mark) {
+  const buttons = store.getters.buttons
+  const res = buttons.filter(x => x.Mark === mark)
+  if (res.length > 0) {
+    return true
+  }
+  return false
+}

@@ -2,21 +2,17 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input v-model="listQuery.operaterAccount" placeholder="账号" style="width: 160px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="listQuery.APIInfo" placeholder="路由模糊查询" style="width: 160px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-select v-model="listQuery.APIType" style="width: 160px" class="filter-item">
+        <el-option v-for="item in chkapitype" :key="item.key" :label="item.label" :value="item.key" />
+      </el-select>
       <el-input v-model="listQuery.clientIP" placeholder="IP" style="width: 160px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-date-picker v-model="listQuery.initTime_begin" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" class="filter-item" placeholder="开始时间" /> ~
       <el-date-picker v-model="listQuery.initTime_end" value-format="yyyy-MM-dd 23:59:59" format="yyyy-MM-dd 23:59:59" type="datetime" class="filter-item" placeholder="结束时间" />
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
       </el-button>
-      <el-button class="filter-item" type="default" @click="setQueryTimetoday()">
-        今天
-      </el-button>
-      <el-button class="filter-item" type="default" @click="setQueryTimePre()">
-        昨天
-      </el-button>
-      <el-button class="filter-item" type="default" @click="setQueryTimepreweek()">
-        上周
-      </el-button>
+      <quick-time @queryByButtonTime="queryByButtonTime" />
     </div>
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" label="ID" width="80">
@@ -35,29 +31,24 @@
           <span>{{ scope.row.AddTime | formatTime('{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="浏览器">
+      <el-table-column align="center" label="操作路由">
         <template slot-scope="scope">
-          <span>{{ scope.row.RequestBrowser }}</span>
+          <span>{{ scope.row.APIInfo }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="IP">
+      <el-table-column align="center" label="操作类型">
+        <template slot-scope="scope">
+          <span>{{ chkapitype.find((item) => item.key==scope.row.APIType).label }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" width="200px" label="IP">
         <template slot-scope="scope">
           <span>{{ scope.row.ClientIP }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="请求API">
-        <template slot-scope="scope">
-          <span>{{ scope.row.RequestUrl }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="项目">
-        <template slot-scope="scope">
-          <span>{{ scope.row.Project }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="100px" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
-          <el-button type="default" size="mini" @click="handleDetail(row)">
+          <el-button v-if="checkbuttonPermission('LogRequestDetail')" type="default" size="mini" @click="handleDetail(row)">
             详细
           </el-button>
         </template>
@@ -78,10 +69,12 @@
 <script>
 import { logrequestList, logrequestDetail } from '@/api/log'
 import { dateVal } from '@/utils/index'
+import QuickTime from '@/components/QuickTime'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+import { checkbuttonPermission } from '@/utils/permission'
 export default {
-  name: 'Request',
-  components: { Pagination },
+  name: 'LogRequest',
+  components: { Pagination, QuickTime },
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -104,7 +97,9 @@ export default {
         initTime_begin: '',
         initTime_end: '',
         seriesGUID: '',
-        source: ''
+        source: '',
+        APIInfo: '',
+        APIType: '0'
       },
       detailQuery: {
         ID: 0
@@ -120,6 +115,12 @@ export default {
         false: '失败'
       },
       chksourceOptions: [{ label: '全部', key: '' }, { label: '电脑', key: 'PC' }, { label: '移动端', key: 'Wap' }],
+      chkapitype: [{ label: '==操作类型==', key: '0' },
+        { label: '页面加载', key: '1' },
+        { label: '数据编辑', key: '2' },
+        { label: '数据删除', key: '3' },
+        { label: '其它', key: '4' }
+      ],
       detailData: []
     }
   },
@@ -128,6 +129,7 @@ export default {
     this.initTime()
   },
   methods: {
+    checkbuttonPermission,
     getList() {
       this.listLoading = true
       logrequestList(this.listQuery).then(response => {
@@ -135,6 +137,11 @@ export default {
         this.total = response.Pageinfo.TotalCount
         this.listLoading = false
       })
+    },
+    queryByButtonTime(data) {
+      this.listQuery.initTime_begin = data.begin
+      this.listQuery.initTime_end = data.end
+      this.handleFilter()
     },
     handleFilter() {
       this.listQuery.page = 1
@@ -148,7 +155,9 @@ export default {
           { key: '请求时间', con: response.Data.AddTime },
           { key: 'RefererUrl', con: response.Data.RefererUrl },
           { key: '请求API', con: response.Data.RequestUrl },
+          { key: '操作路由', con: response.Data.APIInfo },
           { key: '浏览器', con: response.Data.RequestBrowser },
+          { key: '项目', con: response.Data.Project },
           { key: 'UserAgent', con: response.Data.RequestUserAgent },
           { key: 'SeriesGUID', con: response.Data.SeriesGUID },
           { key: '请求数据', con: response.Data.RequestData }
@@ -161,21 +170,6 @@ export default {
         this.listQuery.initTime_begin = dateVal().day_start
         this.listQuery.initTime_end = dateVal().day_end
       }
-    },
-    setQueryTimePre() {
-      this.listQuery.initTime_begin = dateVal().preday_start
-      this.listQuery.initTime_end = dateVal().preday_end
-      this.handleFilter()
-    },
-    setQueryTimetoday() {
-      this.listQuery.initTime_begin = dateVal().day_start
-      this.listQuery.initTime_end = dateVal().day_end
-      this.handleFilter()
-    },
-    setQueryTimepreweek() {
-      this.listQuery.initTime_begin = dateVal().preweek_start
-      this.listQuery.initTime_end = dateVal().preweek_end
-      this.handleFilter()
     }
   }
 }

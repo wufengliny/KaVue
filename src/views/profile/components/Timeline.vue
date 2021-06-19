@@ -1,10 +1,13 @@
 <template>
   <div class="block">
     <el-timeline>
-      <el-timeline-item v-for="(item,index) of timeline" :key="index" :timestamp="item.timestamp" placement="top">
+      <el-timeline-item v-for="(item,index) of logindata" :key="index" :timestamp="item.LoginTime | formatTime('{y}-{m}-{d} {h}:{i}:{s}')" placement="top">
         <el-card>
-          <h4>{{ item.title }}</h4>
-          <p>{{ item.content }}</p>
+          <p>登陆信息：<el-tag :type="item.IsSuccess | tagfilger ">
+            {{ item.Message }}</el-tag></p>
+          <!-- <h4>登陆信息：{{ item.Message }}</h4> -->
+          <p>浏览器：{{ item.RequestBrowser }}</p>
+          <p>登陆IP：{{ item.ClientIP }}</p>
         </el-card>
       </el-timeline-item>
     </el-timeline>
@@ -12,31 +15,30 @@
 </template>
 
 <script>
+import { RecentLogin } from '@/api/other'
 export default {
+  filters: {
+    tagfilger(statu) {
+      const statumap = {
+        true: 'success',
+        false: 'danger'
+      }
+      return statumap[statu]
+    }
+  },
   data() {
     return {
-      timeline: [
-        {
-          timestamp: '2019/4/20',
-          title: 'Update Github template',
-          content: 'PanJiaChen committed 2019/4/20 20:46'
-        },
-        {
-          timestamp: '2019/4/21',
-          title: 'Update Github template',
-          content: 'PanJiaChen committed 2019/4/21 20:46'
-        },
-        {
-          timestamp: '2019/4/22',
-          title: 'Build Template',
-          content: 'PanJiaChen committed 2019/4/22 20:46'
-        },
-        {
-          timestamp: '2019/4/23',
-          title: 'Release New Version',
-          content: 'PanJiaChen committed 2019/4/23 20:46'
-        }
-      ]
+      logindata: []
+    }
+  },
+  created() {
+    this.getloginData()
+  },
+  methods: {
+    getloginData() {
+      RecentLogin().then(response => {
+        this.logindata = response.Data
+      })
     }
   }
 }
