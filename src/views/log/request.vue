@@ -28,7 +28,7 @@
       </el-table-column>
       <el-table-column align="center" label="请求时间">
         <template slot-scope="scope">
-          <span>{{ scope.row.AddTime | formatTime('{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+          <span>{{ scope.row.InitTime | formatTime('{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作路由">

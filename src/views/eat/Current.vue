@@ -4,7 +4,7 @@
       <el-button v-if="checkbuttonPermission('EatCreateSerious')" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="openAdd">
         点餐
       </el-button>
-      <el-button v-show="false" class="filter-item" style="margin-left: 10px;" type="primary" @click="getList">
+      <el-button class="filter-item" style="margin-left: 10px;" type="primary" @click="getList">
         刷新
       </el-button>
       <div>
@@ -203,7 +203,7 @@ export default {
   },
   created() {
     this.getList()
-    this.timer = setInterval(this.getList, 2000)
+    this.timer = setInterval(this.getList, 60000)
   },
   destroyed() {
     clearInterval(this.timer)
