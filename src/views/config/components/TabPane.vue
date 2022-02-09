@@ -18,7 +18,7 @@
       </template>
     </el-table-column>
 
-    <el-table-column label="备注">
+    <el-table-column label="备 注">
       <template slot-scope="{row}">
         <span>{{ row.Memo }}</span>
       </template>
