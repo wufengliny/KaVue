@@ -94,10 +94,11 @@ export function menuspowerupdate(data) {
   })
 }
 
-export function MakeGoogleKey() {
+export function MakeGoogleKey(data) {
   return request({
     url: '/api/Other/MakeGoogleKey',
-    method: 'post'
+    method: 'post',
+    data
   })
 }
 
@@ -120,6 +121,14 @@ export function LookMyGoogleKey(data) {
 export function UpdateMyGoogleKey(data) {
   return request({
     url: '/api/Other/UpdateGoogleAuthCode',
+    method: 'post',
+    data
+  })
+}
+
+export function CheckGoogleAuthSet(data) {
+  return request({
+    url: '/api/Other/CheckGoogleAuthSet',
     method: 'post',
     data
   })
