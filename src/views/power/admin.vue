@@ -115,8 +115,8 @@ export default {
   filters: {
     statusFilter(status) {
       const statusMap = {
-        1: 'success',
-        2: 'info'
+        true: 'success',
+        false: 'info'
       }
       return statusMap[status]
     }
@@ -132,8 +132,8 @@ export default {
         account: ''
       },
       statuinfo: {
-        1: '正常',
-        2: '禁用'
+        true: '正常',
+        false: '禁用'
       },
       textMap: {
         update: '修改',

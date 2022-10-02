@@ -1,7 +1,6 @@
 <template>
-  <el-table :data="list" border fit highlight-current-row style="width: 100%">
+  <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
     <el-table-column
-      v-loading="loading"
       align="center"
       label="ID"
       width="65"
@@ -18,7 +17,7 @@
       </template>
     </el-table-column>
 
-    <el-table-column label="备 注">
+    <el-table-column label="备注">
       <template slot-scope="{row}">
         <span>{{ row.Memo }}</span>
       </template>
@@ -100,6 +99,7 @@
 import { SysConfig, UpdateSysConfig } from '@/api/config'
 import { checkbuttonPermission } from '@/utils/permission'
 export default {
+  name: 'ConfigSysConfig',
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -113,7 +113,7 @@ export default {
     return {
       list: null,
       listQuery: {
-        Category: this.$route.query.Category
+        isSwitch: true
       },
       loading: false,
       statuinfo: {
@@ -163,14 +163,14 @@ export default {
 }
 </script>
 
-<style scoped>
-.edit-input {
-  width: 80%;
-}
-.cancel-btn {
-  position: absolute;
-  right: 15px;
-  top: 10px;
-}
-</style>
+  <style scoped>
+  .edit-input {
+    width: 80%;
+  }
+  .cancel-btn {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+  }
+  </style>
 
