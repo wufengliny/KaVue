@@ -1,8 +1,16 @@
 <template>
   <el-dialog title="谷歌验证码秘钥配置" :visible.sync="showgoogledialog" :before-close="hidedialog">
     <el-form ref="dialogForm" :model="googledata" label-position="left" label-width="90px" style="width: 650px; margin-left:50px;">
+      <el-form-item label="标题" prop="title">
+        <el-input v-model="googledata.title" @change="nameChangemMakekey" />
+      </el-form-item>
       <el-form-item label="秘钥" prop="userKey_password">
         <el-input v-model="googledata.userKey_password" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" readonly="readonly" />
+      </el-form-item>
+      <el-form-item label="二维码" prop="title">
+        <img :src="googledata.QrCodeGoogleAPIImg">
+      </el-form-item>
+      <el-form-item label="" prop="title">
         <el-button type="success" @click="makekey()">
           重新生成
         </el-button>
@@ -22,7 +30,7 @@
 </template>
 
 <script>
-import { MakeGoogleKey, UpdateGoogleKey } from '@/api/power'
+import { MakeGoogleKey, UpdateGoogleKey, GetAdminGoogleTwo } from '@/api/power'
 export default {
   props: {
     showgoogledialog: {
@@ -39,7 +47,10 @@ export default {
       googledata: {
         serverKey_password: '',
         userKey_password: '',
-        id: 0
+        id: 0, // 管理员ID
+        title: '',
+        QrCodeGoogleAPIImg: '',
+        isSet: false
       }
     }
   },
@@ -49,16 +60,37 @@ export default {
     },
     showgoogledialog(val) {
       if (val) {
-        this.googledata.serverKey_password = ''
+        GetAdminGoogleTwo({ ID: this.adminid }).then(response => {
+          if (response.OtherData) {
+            this.googledata.title = response.Data.Title
+            this.googledata.userKey_password = response.Data.ManualEntryKey
+            this.googledata.serverKey_password = response.Data.SecretKey
+            this.googledata.QrCodeGoogleAPIImg = response.Data.QrCodeGoogleAPIImg
+            this.googledata.showGoogleInfo = true
+            this.googledata.isSet = response.OtherData
+            this.googledata.id = this.adminid
+          } else {
+            this.googledata.title = response.Data.Title
+          }
+        })
+      } else {
+        this.googledata.title = ''
         this.googledata.userKey_password = ''
+        this.googledata.serverKey_password = ''
+        this.googledata.QrCodeGoogleAPIImg = ''
       }
     }
   },
+  created() {
+  },
   methods: {
     makekey() {
-      MakeGoogleKey().then(response => {
-        this.googledata.serverKey_password = response.Data.ServerKey
-        this.googledata.userKey_password = response.Data.UserKey
+      var postData = { ID: this.adminid, Title: this.googledata.title }
+      MakeGoogleKey(postData).then(response => {
+        this.googledata.title = response.Data.Title
+        this.googledata.userKey_password = response.Data.ManualEntryKey
+        this.googledata.serverKey_password = response.Data.SecretKey
+        this.googledata.QrCodeGoogleAPIImg = response.Data.QrCodeGoogleAPIImg
       })
     },
     updategoogle() {
@@ -74,6 +106,15 @@ export default {
     },
     hidedialog() {
       this.$emit('hidedialoggoogle')
+    },
+    nameChangemMakekey() {
+      var postData = { ID: this.adminid, Title: this.googledata.title, ServerKey_password: this.googledata.serverKey_password }
+      MakeGoogleKey(postData).then(response => {
+        this.googledata.title = response.Data.Title
+        this.googledata.userKey_password = response.Data.ManualEntryKey
+        this.googledata.serverKey_password = response.Data.SecretKey
+        this.googledata.QrCodeGoogleAPIImg = response.Data.QrCodeGoogleAPIImg
+      })
     }
   }
 }

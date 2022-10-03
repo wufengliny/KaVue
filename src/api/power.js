@@ -134,3 +134,11 @@ export function CheckGoogleAuthSet(data) {
   })
 }
 
+// 获取管理员的谷歌配置信息 {ID}
+export function GetAdminGoogleTwo(data) {
+  return request({
+    url: '/api/Admin/GetAdminGoogleTwo',
+    method: 'post',
+    data
+  })
+}
