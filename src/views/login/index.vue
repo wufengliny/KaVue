@@ -59,7 +59,8 @@
           autocomplete="on"
         />
       </el-form-item>
-      <el-form-item v-if="isImgCode" prop="imgAuthCode">
+
+      <el-form-item v-if="isImgCode" prop="imgAuthCode" class="aab">
         <span class="svg-container">
           <svg-icon icon-class="password" />
         </span>
@@ -72,8 +73,9 @@
           tabindex="1"
           autocomplete="on"
         />
-        <img :src="codeImg">
+        <img :src="codeImg" @click="getImgCode">
       </el-form-item>
+
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
     </el-form>
   </div>
@@ -96,7 +98,8 @@ export default {
         userName: '',
         login_password: '',
         googleAuthCode: '',
-        imgAuthCode: ''
+        imgAuthCode: '',
+        uuid: ''
       },
       loginRules: {
         userName: [{ required: true, message: '请输入登录账号', trigger: 'blur' }],
@@ -203,8 +206,10 @@ export default {
       })
     },
     getImgCode() {
-      GetCodeImg().then(response => {
-        this.codeImg = response.Data.img
+      var data = { txt: this.loginForm.uuid }
+      GetCodeImg(data).then(response => {
+        this.codeImg = 'data:image/png;base64,' + response.Data.img
+        this.loginForm.uuid = response.Data.uuid
       })
     }
   }
@@ -212,6 +217,10 @@ export default {
 </script>
 
 <style lang="scss">
+.aab  .el-form-item__content {
+  display: flex;
+}
+
 /* 修复input 背景不协调 和光标变色 */
 /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
 

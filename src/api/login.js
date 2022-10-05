@@ -23,9 +23,10 @@ export function LoginConfig() {
   })
 }
 
-export function GetCodeImg() {
+export function GetCodeImg(data) {
   return request({
     url: '/api/Vcode',
-    method: 'get'
+    method: 'post',
+    data
   })
 }
