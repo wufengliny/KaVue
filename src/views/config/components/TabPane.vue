@@ -117,8 +117,8 @@ export default {
       },
       loading: false,
       statuinfo: {
-        '1': '开',
-        '0': '关'
+        '1': '是',
+        '0': '否'
       },
       dateclearable: false
     }

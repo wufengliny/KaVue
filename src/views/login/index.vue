@@ -45,7 +45,7 @@
         </el-form-item>
       </el-tooltip>
 
-      <el-form-item prop="googleAuthCode">
+      <el-form-item v-if="isGoogleCode" prop="googleAuthCode">
         <span class="svg-container">
           <svg-icon icon-class="password" />
         </span>
@@ -59,12 +59,28 @@
           autocomplete="on"
         />
       </el-form-item>
+      <el-form-item v-if="isImgCode" prop="imgAuthCode">
+        <span class="svg-container">
+          <svg-icon icon-class="password" />
+        </span>
+        <el-input
+          ref="imgAuthCode"
+          v-model="loginForm.imgAuthCode"
+          placeholder="图片验证码"
+          name="imgAuthCode"
+          type="text"
+          tabindex="1"
+          autocomplete="on"
+        />
+        <img :src="codeImg" />
+      </el-form-item>
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
     </el-form>
   </div>
 </template>
 
 <script>
+import { LoginConfig, GetCodeImg } from '@/api/login'
 export default {
   name: 'Login',
   data() {
@@ -79,18 +95,24 @@ export default {
       loginForm: {
         userName: '',
         login_password: '',
-        googleAuthCode: ''
+        googleAuthCode: '',
+        imgAuthCode: ''
       },
       loginRules: {
         userName: [{ required: true, message: '请输入登录账号', trigger: 'blur' }],
         login_password: [{ required: true, trigger: 'blur', validator: validatePassword }],
-        googleAuthCode: [{ required: true, message: '请输入授权码', trigger: 'blur' }]
+        googleAuthCode: [{ required: true, message: '请输入授权码', trigger: 'blur' }],
+        imgAuthCode: [{ required: true, message: '请输入验证码', trigger: 'blur' }]
       },
       passwordType: 'password',
       capsTooltip: false,
       loading: false,
       redirect: undefined,
-      otherQuery: {}
+      otherQuery: {},
+      loginConfigData: {},
+      isGoogleCode: false,
+      isImgCode: false,
+      codeImg: ''
     }
   },
   watch: {
@@ -106,7 +128,8 @@ export default {
     }
   },
   created() {
-    // window.addEventListener('storage', this.afterQRScan)
+    this.getLoginConfig()
+    this.getImgCode()
   },
   mounted() {
     if (this.loginForm.userName === '') {
@@ -158,6 +181,31 @@ export default {
         }
         return acc
       }, {})
+    },
+    getLoginConfig() {
+      LoginConfig().then(response => {
+        response.Data.forEach(element => {
+          if (element.Key === 'AdminLoginIsOpenGoogleCodeVerify') {
+            if (element.Value === '1') {
+              this.isGoogleCode = true
+            } else {
+              this.isGoogleCode = false
+            }
+          }
+          if (element.Key === 'AdminLoginIsOpenImageCodeVerify') {
+            if (element.Value === '1') {
+              this.isImgCode = true
+            } else {
+              this.isImgCode = false
+            }
+          }
+        })
+      })
+    },
+    getImgCode() {
+      GetCodeImg().then(response => {
+        console.log(response)
+      })
     }
   }
 }

@@ -15,3 +15,17 @@ export function logout() {
     method: 'get'
   })
 }
+
+export function LoginConfig() {
+  return request({
+    url: '/api/Login/LoginConfig',
+    method: 'post'
+  })
+}
+
+export function GetCodeImg() {
+  return request({
+    url: '/api/Vcode',
+    method: 'get'
+  })
+}
