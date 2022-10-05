@@ -72,7 +72,7 @@
           tabindex="1"
           autocomplete="on"
         />
-        <img :src="codeImg" />
+        <img :src="codeImg">
       </el-form-item>
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
     </el-form>
