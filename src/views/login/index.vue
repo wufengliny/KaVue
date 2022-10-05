@@ -204,7 +204,7 @@ export default {
     },
     getImgCode() {
       GetCodeImg().then(response => {
-        console.log(response)
+        this.codeImg = response.Data.img
       })
     }
   }
