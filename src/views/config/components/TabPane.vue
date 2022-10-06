@@ -1,7 +1,16 @@
 <template>
-  <el-table :data="list" border fit highlight-current-row style="width: 100%">
+  <el-table
+    :data="list"
+    border
+    fit
+    highlight-current-row
+    style="width: 100%"
+    @sort-change="sortChange"
+  >
     <el-table-column
       v-loading="loading"
+      sortable="custom"
+      prop="id"
       align="center"
       label="ID"
       width="65"
@@ -23,7 +32,11 @@
         <span>{{ row.Memo }}</span>
       </template>
     </el-table-column>
-
+    <!-- <el-table-column sortable="custom" prop="SortField" label="排序">
+      <template slot-scope="{row}">
+        <span>{{ row.SortField }}</span>
+      </template>
+    </el-table-column> -->
     <el-table-column min-width="300px" label="值">
       <template slot-scope="{row}">
         <el-tag v-if="row.DataType==='Bool'" :type="row.TValue | statusFilter">
@@ -113,7 +126,9 @@ export default {
     return {
       list: null,
       listQuery: {
-        Category: this.$route.query.Category
+        Category: this.$route.query.Category,
+        OrderField: 'SortField',
+        OrderDirection: 'descending'
       },
       loading: false,
       statuinfo: {
@@ -139,6 +154,12 @@ export default {
         })
         this.loading = false
       })
+    },
+    sortChange(sdata) {
+      const { prop, order } = sdata
+      this.listQuery.OrderField = prop
+      this.listQuery.OrderDirection = order
+      this.getList()
     },
     checkbuttonPermission,
     updateconfig(row) {
