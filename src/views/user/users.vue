@@ -27,7 +27,16 @@
         设置代理线
       </el-button>
     </div>
-    <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%;" @selection-change="chkChange">
+    <el-table
+      v-loading="listLoading"
+      :data="list"
+      border
+      fit
+      highlight-current-row
+      style="width: 100%;"
+      @sort-change="sortChange"
+      @selection-change="chkChange"
+    >
       <el-table-column type="selection" />
       <el-table-column align="center" label="查询账号">
         <template slot-scope="scope">
@@ -39,29 +48,29 @@
           <span>{{ scope.row.AdminGroupName }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="代理">
+      <el-table-column align="center" label="代理" sortable="custom" prop="IsAgent">
         <template slot-scope="{row}">
           <el-tag :type="row.IsAgent | userFilter">
             {{ userinfo[row.IsAgent] }}
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="创建时间">
+      <el-table-column align="center" label="创建时间" sortable="custom" prop="bu.AddTime">
         <template slot-scope="scope">
           <span>{{ scope.row.AddTime | formatTime('{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="登录次数">
+      <el-table-column align="center" label="登录次数" sortable="custom" prop="LoginCount">
         <template slot-scope="scope">
           <span>{{ scope.row.LoginCount }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="Statu" align="center" label="总入款">
+      <el-table-column key="Statu" align="center" label="总入款" sortable="custom" prop="InSumMoney">
         <template slot-scope="scope">
           <span>{{ scope.row.InSumMoney }}</span>
         </template>
       </el-table-column>
-      <el-table-column width="100px" label="状态">
+      <el-table-column width="100px" label="状态" sortable="custom" prop="Statu">
         <template slot-scope="{row}">
           <el-tag :type="row.Statu | statuFilter">
             {{ statuinfo[row.Statu] }}
@@ -216,7 +225,9 @@ export default {
         RegIP: '',
         ParentSearchAccount: '',
         RegBeginTime: '',
-        RegEndTime: ''
+        RegEndTime: '',
+        OrderField: 'bu.ID',
+        OrderDirection: 'descending'
       },
       addDialog: {
         showdialog: false
@@ -281,6 +292,12 @@ export default {
         this.listLoading = false
         this.total = response.Pageinfo.TotalCount
       })
+    },
+    sortChange(sdata) {
+      const { prop, order } = sdata
+      this.listQuery.OrderField = prop
+      this.listQuery.OrderDirection = order
+      this.getList()
     },
     chkChange(val) {
       this.chkChecked = val
