@@ -130,47 +130,47 @@ export const katestRoutes = [
     ]
   },
   {
-    path: '/eat',
-    name: 'Eat',
+    path: '/okxcoin',
+    name: 'OKXVirtualCoin',
     component: Layout,
-    redirect: '/Eat/Current',
+    redirect: '/okxcoin/MyOrder',
     hidden: false,
     meta: {
-      title: '点餐系统',
+      title: '虚拟币交易',
       icon: 'peoples'
     },
     children: [
       {
-        path: 'Current',
-        component: () => import('@/views/eat/Current'),
-        name: 'EatCurrent',
+        path: 'MyAccount',
+        component: () => import('@/views/okxcoin/MyAccount'),
+        name: 'OKXSearchGetBalance',
         hidden: false,
-        meta: { title: '我要点餐', icon: '', noCache: false } // meta菜单显示信息  不管用
+        meta: { title: '我的账户', icon: '', noCache: false }
       },
       {
-        path: 'Acivity',
-        component: () => import('@/views/eat/Acivity'),
-        name: 'EatAcivity',
+        path: 'MyOrder',
+        component: () => import('@/views/okxcoin/MyOrder'),
+        name: 'OKXOrderMyOrder',
         hidden: false,
-        meta: { title: '点餐活动', icon: '', noCache: false }
+        meta: { title: '交易订单', icon: '', noCache: false } // meta菜单显示信息  不管用
       },
       {
-        path: 'OrderList',
-        component: () => import('@/views/eat/OrderList'),
-        name: 'EatOrderList',
+        path: 'MyOrderHIS',
+        component: () => import('@/views/okxcoin/MyOrderHIS'),
+        name: 'OKXOrderMyOrderHIS',
         hidden: false,
         meta: { title: '历史订单', icon: '', noCache: false }
       },
       {
         path: 'ShopList',
-        component: () => import('@/views/eat/ShopList'),
+        component: () => import('@/views/okxcoin/ShopList'),
         name: 'EatShopList',
         hidden: false,
         meta: { title: '商家管理', icon: '', noCache: false }
       },
       {
         path: 'Rank',
-        component: () => import('@/views/eat/Rank'),
+        component: () => import('@/views/okxcoin/Rank'),
         name: 'EatRank',
         hidden: false,
         meta: { title: '榜上英雄', icon: '', noCache: false }
