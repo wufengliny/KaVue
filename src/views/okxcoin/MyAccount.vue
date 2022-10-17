@@ -1,254 +1,139 @@
 <template>
   <div class="app-container">
-    <div class="filter-container">
-      <el-input v-model="listQuery.account" placeholder="点餐者" style="width: 160px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-date-picker v-model="listQuery.addTime_begin" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" class="filter-item" placeholder="开始时间" /> ~
-      <el-date-picker v-model="listQuery.addTime_end" value-format="yyyy-MM-dd 23:59:59" format="yyyy-MM-dd 23:59:59" type="datetime" class="filter-item" placeholder="结束时间" />
-      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
-        搜索
-      </el-button>
-      <quick-time @queryByButtonTime="queryByButtonTime" />
+    <div class="components-container board">
+      <Kanban :money="moneyData.totalBal" group="'mission" class="kanban todo" header-text="总资产" />
+      <Kanban :money="moneyData.funding" group="'mission" class="kanban working" header-text="资金账户" />
+      <Kanban :money="moneyData.trading" group="'mission" class="kanban done" header-text="交易账户" />
     </div>
-    <el-table ref="katable" v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
-      <el-table-column align="center" label="账号">
+    <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
+      <el-table-column align="center" label="产品">
         <template slot-scope="scope">
-          <span>{{ scope.row.EatAcount }}</span>
+          <span>{{ scope.row.instId }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="菜名">
+      <el-table-column align="center" label="开仓均价">
         <template slot-scope="scope">
-          <span>{{ scope.row.FoodName }}</span>
+          <span>{{ scope.row.avgPx }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" width="180" label="点餐时间">
+      <el-table-column align="center" label="初始化保证金">
         <template slot-scope="scope">
-          <span :title="scope.row.Memo">{{ scope.row.AddTime }}</span>
+          <span>{{ scope.row.imr }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="随机数">
+      <el-table-column align="center" label="预估强平价">
         <template slot-scope="scope">
-          <span>{{ scope.row.RandomNum }}</span>
+          <span>{{ scope.row.liqPx }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="活动号">
+      <el-table-column align="center" label="杠杆倍数">
         <template slot-scope="scope">
-          <span>{{ scope.row.SeriousNO }}</span>
+          <span>{{ scope.row.lever }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="价格">
+      <el-table-column align="center" label="标记价格">
         <template slot-scope="scope">
-          <span>{{ scope.row.Price }}</span>
+          <span>{{ scope.row.markPx }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="收钱">
+      <el-table-column align="center" label="保证金率">
         <template slot-scope="scope">
-          <span>{{ scope.row.GiveMoney }}</span>
+          <span>{{ scope.row.mgnRatio| numpad }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="找零">
+      <el-table-column align="center" label="盈亏">
         <template slot-scope="scope">
-          <el-tag :type="zhaolingTag(scope.row)">
-            {{ zhaoLinginfo(scope.row) }}
-          </el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" align="center" width="150" class-name="small-padding fixed-width">
-        <template slot-scope="{row}">
-          <el-button v-if="checkbuttonPermission('EatShouQian')&&row.GiveMoney === 0" type="primary" size="mini" @click="openShou(row)">
-            收钱
-          </el-button>
-          <el-button v-if="checkbuttonPermission('EatShouQian')&&ishowzhaoLing(row)" type="warning" size="mini" @click="ZhaoLingPost(row)">
-            找零
-          </el-button>
+          <span>{{ scope.row.upl| numpad }} ({{ scope.row.uplRatio| numRate }}%)</span>
         </template>
       </el-table-column>
     </el-table>
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
-    <el-dialog title="收钱" :visible.sync="dialogshou">
-      <el-form ref="dataForm" :model="dialogshouData" label-position="left" label-width="90px" style="width: 400px; margin-left:50px;">
-        <el-form-item label="点餐者" prop="eatAcount">
-          <el-input v-model="dialogshouData.eatAcount" disabled />
-        </el-form-item>
-        <el-form-item label="收钱" prop="price">
-          <el-input v-model="dialogshouData.receiveMoney" type="number" />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogshou = false">
-          取消
-        </el-button>
-        <el-button type="primary" @click="shouqianPost()">
-          保存
-        </el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 <script>
-import { OrderList, ShouQian, ZhaoLing } from '@/api/eat'
-import { dateVal } from '@/utils/index'
-import QuickTime from '@/components/QuickTime'
-import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
-import { checkbuttonPermission } from '@/utils/permission'
-import { MessageBox } from 'element-ui'
+import Kanban from './components/zichan'
+import { GetValuation, GetPositions } from '@/api/okx'
 export default {
-  name: 'EatOrderList',
-  components: { Pagination, QuickTime },
+  name: 'OkxcoinMyAccount',
+  components: {
+    Kanban
+  },
   filters: {
-    statusFilter(status) {
-      const statusMap = {
-        true: 'success',
-        false: 'danger'
+    numpad(numdata) {
+      if (numdata) {
+        return Number(numdata).toFixed(2)
+      } else {
+        return 0
       }
-      return statusMap[status]
+    },
+    numRate(numdata) {
+      if (numdata) {
+        var num = numdata * 100
+        return num.toFixed(2)
+      } else {
+        return 0
+      }
     }
   },
   data() {
     return {
       list: null,
-      total: 0,
       listLoading: true,
+      moneyData: {
+        funding: 0,
+        trading: 0,
+        totalBal: 0
+      },
       listQuery: {
-        page: 1,
-        limit: 20,
-        addTime_begin: '',
-        addTime_end: '',
-        seriousNO: 0,
-        account: ''
-      },
-      detailQuery: {
-        ID: 0
-      },
-      dialogStatus: '',
-      textMap: {
-        update: '修改',
-        create: '添加'
-      },
-      dialogFormVisible: false,
-      statuinfo: {
-        true: '成功',
-        false: '失败'
-      },
-      dialogshou: false,
-      dialogshouData: {
-        seriousNO: 0,
-        eatAcount: '',
-        receiveMoney: 0
+        instType: ''
       }
     }
   },
-  // watch: {
-  //   data() {
-  //     // this.$nextTick(() => {
-  //     //   this.$refs.katable.doLayout()
-  //     // })
-  //     this.$refs.katable.doLayout()
-  //   }
-  // },
   created() {
+    this.getValuation()
     this.getList()
-    this.initTime()
   },
   methods: {
-    checkbuttonPermission,
+    getValuation() {
+      GetValuation({ Txt: 'USDT' }).then(response => {
+        this.moneyData.funding = response.Data.data[0].details.funding
+        this.moneyData.trading = response.Data.data[0].details.trading
+        this.moneyData.totalBal = response.Data.data[0].totalBal
+      })
+    },
     getList() {
       this.listLoading = true
-      OrderList(this.listQuery).then(response => {
+      GetPositions(this.listQuery).then(response => {
         this.list = response.Data
-        this.total = response.Pageinfo.TotalCount
         this.listLoading = false
-      })
-    },
-    queryByButtonTime(data) {
-      this.listQuery.addTime_begin = data.begin
-      this.listQuery.addTime_end = data.end
-      this.handleFilter()
-    },
-    handleFilter() {
-      this.listQuery.page = 1
-      this.getList()
-    },
-    initTime() {
-      if (this.listQuery.addTime_begin === '') {
-        this.listQuery.addTime_begin = dateVal().day_start
-        this.listQuery.addTime_end = dateVal().day_end
-      }
-    },
-    ishowzhaoLing(row) {
-      if (row.Price === row.GiveMoney) {
-        return false
-      }
-      if (row.GiveMoney > row.Price && !row.IsReturn) {
-        return true
-      }
-      if (row.GiveMoney > row.Price && row.IsReturn) {
-        return false
-      }
-    },
-    zhaolingTag(row) {
-      if (row.Price === row.GiveMoney) {
-        return 'success'
-      }
-      if (row.GiveMoney > row.Price && !row.IsReturn) {
-        return 'warning'
-      }
-      if (row.GiveMoney > row.Price && row.IsReturn) {
-        return 'success'
-      }
-      if (row.GiveMoney === 0) {
-        return 'danger'
-      }
-    },
-    zhaoLinginfo(row) {
-      if (row.Price === row.GiveMoney) {
-        return '无需找零'
-      }
-      if (row.GiveMoney > row.Price && !row.IsReturn) {
-        return '需要找零：' + row.ReturnMoney
-      }
-      if (row.GiveMoney > row.Price && row.IsReturn) {
-        return '已找零'
-      }
-      if (row.GiveMoney === 0) {
-        return '未给钱'
-      }
-    },
-    openShou(row) {
-      this.dialogshouData.seriousNO = row.SeriousNO
-      this.dialogshouData.eatAcount = row.EatAcount
-      this.dialogshouData.receiveMoney = row.ReceiveMoney
-      this.dialogshou = true
-    },
-    shouqianPost() {
-      ShouQian(this.dialogshouData).then(() => {
-        this.getList()
-        this.dialogshou = false
-        this.$notify({
-          title: 'Success',
-          message: '收钱成功',
-          type: 'success',
-          duration: 2000
-        })
-      })
-    },
-    ZhaoLingPost(row) {
-      MessageBox.confirm('确定已找零了嘛？', '提醒', {
-        type: 'warning'
-      }).then(() => {
-        ZhaoLing({ seriousNO: row.SeriousNO, eatAcount: row.EatAcount }).then(() => {
-          this.getList()
-          this.$notify({
-            title: 'Success',
-            message: '找零成功',
-            type: 'success',
-            duration: 2000
-          })
-        })
       })
     }
   }
 }
 </script>
-<style scoped>
+<style lang="scss">
+.board {
+  width: 1000px;
+  margin-left: 20px;
+  display: flex;
+  justify-content: space-around;
+  flex-direction: row;
+  align-items: flex-start;
+}
+.kanban {
+  &.todo {
+    .board-column-header {
+      background: #4A9FF9;
+    }
+  }
+  &.working {
+    .board-column-header {
+      background: #f9944a;
+    }
+  }
+  &.done {
+    .board-column-header {
+      background: #2ac06d;
+    }
+  }
+}
 </style>
-
