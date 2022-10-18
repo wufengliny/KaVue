@@ -13,7 +13,7 @@
       </el-table-column>
       <el-table-column align="center" label="开仓均价">
         <template slot-scope="scope">
-          <span>{{ scope.row.avgPx }}</span>
+          <span>{{ scope.row.avgPx | numpad }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="初始化保证金">

@@ -162,11 +162,11 @@ export const katestRoutes = [
         meta: { title: '历史订单', icon: '', noCache: false }
       },
       {
-        path: 'ShopList',
-        component: () => import('@/views/okxcoin/ShopList'),
-        name: 'EatShopList',
+        path: 'OKXConfig',
+        component: () => import('@/views/okxcoin/OKXConfig'),
+        name: 'OKXConfig',
         hidden: false,
-        meta: { title: '商家管理', icon: '', noCache: false }
+        meta: { title: '交易配置', icon: '', noCache: false }
       },
       {
         path: 'Rank',

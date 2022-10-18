@@ -20,6 +20,7 @@ export default {
     return {
       tabMapOptions: [
         { label: '系统安全', key: 'SafeConfig' },
+        { label: 'OKX配置', key: 'OKXConfig' },
         { label: '测试', key: 'TestConfig' }
       ],
       activeName: 'SafeConfig',
