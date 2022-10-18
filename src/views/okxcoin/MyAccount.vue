@@ -18,12 +18,12 @@
       </el-table-column>
       <el-table-column align="center" label="初始化保证金">
         <template slot-scope="scope">
-          <span>{{ scope.row.imr }}</span>
+          <span>{{ scope.row.imr| numpad }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="预估强平价">
         <template slot-scope="scope">
-          <span>{{ scope.row.liqPx }}</span>
+          <span>{{ scope.row.liqPx| numpad }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="杠杆倍数">
