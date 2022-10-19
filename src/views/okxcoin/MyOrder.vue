@@ -1,57 +1,19 @@
 <template>
   <div class="app-container">
-    <div class="filter-container">
-      <el-button v-if="checkbuttonPermission('EatCreateSerious')" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="openAdd">
-        点餐
-      </el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" @click="getList">
-        刷新
-      </el-button>
-      <div>
-        <el-image style="width: 100px; height: 100px" :src="urls[0]" :preview-src-list="urls" />
-        <el-image style="width: 100px; height: 100px" :src="urls[1]" :preview-src-list="urls" />
-        <el-image style="width: 100px; height: 100px" :src="urls[2]" :preview-src-list="urls" />
-        <el-image style="width: 100px; height: 100px" :src="urls[3]" :preview-src-list="urls" />
-        <el-image style="width: 100px; height: 100px" :src="urls[4]" :preview-src-list="urls" />
-      </div>
-      <el-alert v-if="activitystatu" title="点餐活动已结束" type="error" />
-    </div>
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
-      <el-table-column align="center" label="点餐者">
+      <el-table-column align="center" label="产品">
         <template slot-scope="scope">
-          <span>{{ scope.row.EatAcount }}</span>
+          <span>{{ scope.row.InstId }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="菜名">
+      <el-table-column align="center" label="买入价">
         <template slot-scope="scope">
-          <span>{{ scope.row.FoodName }}</span>
+          <span>{{ scope.row.INPrice }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="价格">
+      <el-table-column align="center" label="挂出价">
         <template slot-scope="scope">
-          <span>{{ scope.row.Price }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" width="160px" label="点餐时间">
-        <template slot-scope="scope">
-          <span>{{ scope.row.AddTime }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="随机数">
-        <template slot-scope="scope">
-          <span>{{ scope.row.RandomNum }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="收钱">
-        <template slot-scope="scope">
-          <span>{{ scope.row.GiveMoney }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="找零">
-        <template slot-scope="scope">
-          <el-tag :type="zhaolingTag(scope.row)">
-            {{ zhaoLinginfo(scope.row) }}
-          </el-tag>
+          <span>{{ scope.row.WhenOut }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
@@ -116,11 +78,10 @@
   </div>
 </template>
 <script>
-import { Current, AddOrder, EditOrder, eatuser, ShouQian, ZhaoLing } from '@/api/eat'
+import { GetOKXOrderMyOrder } from '@/api/okx'
 import { checkbuttonPermission } from '@/utils/permission'
-import { MessageBox } from 'element-ui'
 export default {
-  name: 'EatCurrent',
+  name: 'OKXOrderMyOrder',
   filters: {
     statusFilter(row) {
       const date = new Date()
@@ -162,7 +123,8 @@ export default {
       listLoading: true,
       listQuery: {
         page: 1,
-        limit: 20
+        limit: 20,
+        Statu: -1
       },
       dialogData: {
         account: '',
@@ -212,151 +174,9 @@ export default {
     checkbuttonPermission,
     getList() {
       this.listLoading = true
-      Current({ str: '' }).then(response => {
+      GetOKXOrderMyOrder(this.listQuery).then(response => {
         this.list = response.Data
-        this.summoney = 0
-        this.list.forEach(element => {
-          this.summoney += element.Price
-        })
         this.listLoading = false
-        if (response.Message === 'no') {
-          this.activitystatu = false
-        }
-      })
-    },
-    checkIsEnd(row) {
-      const date = new Date()
-      const dateBegin = new Date(row.BeginTime)
-      const dateEnd = new Date(row.EndTime)
-      if (dateBegin < date && dateEnd > date && row.IsEnd === false) {
-        return false
-      } else {
-        return true
-      }
-    },
-    createData() {
-      this.$refs['dataForm'].validate((valid) => {
-        if (valid) {
-          AddOrder(this.dialogData).then(() => {
-            this.getList()
-            this.dialogFormVisible = false
-            this.$notify({
-              title: 'Success',
-              message: '添加成功',
-              type: 'success',
-              duration: 2000
-            })
-          })
-        }
-      })
-    },
-    editorder() {
-      EditOrder(this.dialogData).then(() => {
-        this.getList()
-        this.dialogFormVisible = false
-        this.$notify({
-          title: 'Success',
-          message: '修改成功',
-          type: 'success',
-          duration: 2000
-        })
-      })
-    },
-    openAdd() {
-      this.dialogFormVisible = true
-      this.dialogStatus = 'create'
-      this.dialogData.account = ''
-      this.dialogData.foodName = ''
-      this.dialogData.price = 0
-      if (this.eatusers === null) {
-        eatuser().then(response => {
-          this.eatusers = response.Data
-        })
-      }
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
-    },
-    openEdit(row) {
-      this.dialogStatus = 'update'
-      this.dialogData.account = row.EatAcount
-      this.dialogData.foodName = row.FoodName
-      this.dialogData.price = row.Price
-      this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
-    },
-    openShou(row) {
-      this.dialogshouData.seriousNO = row.SeriousNO
-      this.dialogshouData.eatAcount = row.EatAcount
-      this.dialogshouData.receiveMoney = row.ReceiveMoney
-      this.dialogshou = true
-    },
-    shouqianPost() {
-      ShouQian(this.dialogshouData).then(() => {
-        this.getList()
-        this.dialogshou = false
-        this.$notify({
-          title: 'Success',
-          message: '收钱成功',
-          type: 'success',
-          duration: 2000
-        })
-      })
-    },
-    ishowzhaoLing(row) {
-      if (row.Price === row.GiveMoney) {
-        return false
-      }
-      if (row.GiveMoney > row.Price && !row.IsReturn) {
-        return true
-      }
-      if (row.GiveMoney > row.Price && row.IsReturn) {
-        return false
-      }
-    },
-    zhaolingTag(row) {
-      if (row.Price === row.GiveMoney) {
-        return 'success'
-      }
-      if (row.GiveMoney > row.Price && !row.IsReturn) {
-        return 'warning'
-      }
-      if (row.GiveMoney > row.Price && row.IsReturn) {
-        return 'success'
-      }
-      if (row.GiveMoney === 0) {
-        return 'danger'
-      }
-    },
-    zhaoLinginfo(row) {
-      if (row.Price === row.GiveMoney) {
-        return '无需找零'
-      }
-      if (row.GiveMoney > row.Price && !row.IsReturn) {
-        return '需要找零：' + row.ReturnMoney
-      }
-      if (row.GiveMoney > row.Price && row.IsReturn) {
-        return '已找零'
-      }
-      if (row.GiveMoney === 0) {
-        return '未给钱'
-      }
-    },
-    ZhaoLingPost(row) {
-      MessageBox.confirm('确定已找零了嘛？', '提醒', {
-        type: 'warning'
-      }).then(() => {
-        ZhaoLing({ seriousNO: row.SeriousNO, eatAcount: row.EatAcount }).then(() => {
-          this.getList()
-          this.$notify({
-            title: 'Success',
-            message: '找零成功',
-            type: 'success',
-            duration: 2000
-          })
-        })
       })
     },
     resetDialogData() {
