@@ -17,3 +17,11 @@ export function GetPositions(data) {
   })
 }
 
+export function GetOKXConfigList(data) {
+  return request({
+    url: '/api/OKXConfig/PageList',
+    method: 'post',
+    data
+  })
+}
+
