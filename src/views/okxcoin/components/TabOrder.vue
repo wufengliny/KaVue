@@ -16,6 +16,16 @@
           <span>{{ scope.row.WhenOut }}</span>
         </template>
       </el-table-column>
+      <el-table-column align="center" label="价值">
+        <template slot-scope="scope">
+          <span>{{ scope.row.WhenOut }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="盈亏">
+        <template slot-scope="scope">
+          <span>{{ scope.row.Profit }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
           <el-button v-if="checkbuttonPermission('EatEditOrder')" type="success" size="mini" @click="openEdit(row)">
