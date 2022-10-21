@@ -1,35 +1,50 @@
 <template>
   <div class="app-container">
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
-      <el-table-column align="center" label="产品">
+      <el-table-column align="center" width="150" label="产品">
         <template slot-scope="scope">
           <span>{{ scope.row.InstId }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="买入价">
+      <el-table-column align="center" width="260" label="订单号">
+        <template slot-scope="scope">
+          <el-tag type="success">
+            {{ scope.row.OrderOKX }}
+          </el-tag>
+          <el-tag type="info">
+            {{ scope.row.OrderNO }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" width="100" label="买入价">
         <template slot-scope="scope">
           <span>{{ scope.row.INPrice }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="挂出价">
+      <el-table-column align="center" width="100" label="挂出价">
         <template slot-scope="scope">
           <span>{{ scope.row.WhenOut }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="价值">
+      <el-table-column align="center" width="100" label="张数">
         <template slot-scope="scope">
-          <span>{{ scope.row.WhenOut }}</span>
+          <span>{{ scope.row.Num }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="盈亏">
+      <el-table-column align="center" width="100" label="手续费">
         <template slot-scope="scope">
           <span>{{ scope.row.Profit }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
+      <el-table-column align="center" width="100" label="预计盈利">
+        <template slot-scope="scope">
+          <span>{{ scope.row.Profit }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
           <el-button v-if="checkbuttonPermission('EatEditOrder')" type="success" size="mini" @click="openEdit(row)">
-            编辑
+            撤销挂单
           </el-button>
         </template>
       </el-table-column>

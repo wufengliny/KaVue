@@ -135,7 +135,7 @@ export default {
       if (row.TradeMode === 1) {
         str = '买入价格：' + row.InPrice + ',卖出价格：' + row.OutPrice + ',买入' + row.InNum + '张,结束后是否重复:' + ((row.IsReapt) ? '是' : '否')
       } else if (row.TradeMode === 2) {
-        str = '每跌' + row.DownPoint + '多少点,购买' + row.InNum + '张数 涨了' + row.UPOutPoint + '点之后卖出'
+        str = '每跌' + row.DownPoint + '点,购买' + row.InNum + '张数 涨了' + row.UPOutPoint + '点之后卖出'
       } else if (row.TradeMode === 3) {
         str = '做T区间：' + row.AreaDown + '到' + row.AreaUP + ',买入张数：' + row.InNum + '张'
       }
