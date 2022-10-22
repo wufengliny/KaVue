@@ -1,5 +1,11 @@
 <template>
   <div class="app-container">
+    <div class="filter-container">
+      <el-button class="filter-item" type="primary" icon="el-icon-refresh" @click="reflashdata">
+        刷新
+      </el-button>
+    </div>
+    <el-alert :title="'买入手续费：'+ SumInFee+',卖出手续费：'+SumOutFee+',预计盈利：'+SumProfit" type="success" />
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" width="150" label="产品">
         <template slot-scope="scope">
@@ -8,9 +14,6 @@
       </el-table-column>
       <el-table-column align="center" width="260" label="订单号">
         <template slot-scope="scope">
-          <el-tag type="success">
-            {{ scope.row.OrderOKX }}
-          </el-tag>
           <el-tag type="info">
             {{ scope.row.OrderNO }}
           </el-tag>
@@ -33,7 +36,12 @@
       </el-table-column>
       <el-table-column align="center" width="100" label="手续费">
         <template slot-scope="scope">
-          <span>{{ scope.row.Profit }}</span>
+          <el-tag type="success">
+            {{ scope.row.InFee }}
+          </el-tag>
+          <el-tag type="info">
+            {{ scope.row.OutFee }}
+          </el-tag>
         </template>
       </el-table-column>
       <el-table-column align="center" width="100" label="预计盈利">
@@ -49,15 +57,17 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-alert :title="'金额总计:'+ summoney" type="success" />
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
   </div>
 </template>
 
 <script>
 import { GetOKXOrderMyOrder } from '@/api/okx'
 import { checkbuttonPermission } from '@/utils/permission'
+import Pagination from '@/components/Pagination'
 export default {
   name: 'OKXOrderMyOrder',
+  components: { Pagination },
   data() {
     return {
       list: null,
@@ -66,9 +76,11 @@ export default {
       listQuery: {
         page: 1,
         limit: 20,
-        Statu: this.$route.query.Statu
+        Statu: 1
       },
-      dialogStatus: '',
+      SumInFee: 0,
+      SumOutFee: 0,
+      SumProfit: 0,
       rules: {
         foodName: [{ required: true, message: '请输入菜名', trigger: 'blur' }]
       },
@@ -85,8 +97,6 @@ export default {
     }
   },
   created() {
-    console.log(this.$route.query.Statu)
-    console.log(this.listQuery.Statu)
     this.getList()
   },
   methods: {
@@ -94,16 +104,16 @@ export default {
     getList() {
       this.listLoading = true
       GetOKXOrderMyOrder(this.listQuery).then(response => {
-        this.list = response.Data
+        this.list = response.Data.Data
+        this.SumInFee = response.Data.SumData.SumInFee
+        this.SumOutFee = response.Data.SumData.SumOutFee
+        this.SumProfit = response.Data.SumData.SumProfit
+        this.total = response.Pageinfo.TotalCount
         this.listLoading = false
       })
     },
-    resetDialogData() {
-      this.dialogData = {
-        ID: 0,
-        name: '',
-        memo: ''
-      }
+    reflashdata() {
+      this.getList()
     }
   }
 }

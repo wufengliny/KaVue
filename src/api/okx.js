@@ -17,6 +17,22 @@ export function GetPositions(data) {
   })
 }
 
+export function GetOrder(data) {
+  return request({
+    url: '/api/OKXSearch/GetOrder',
+    method: 'post',
+    data
+  })
+}
+
+export function GetTicker(data) {
+  return request({
+    url: '/api/OKXSearch/GetTicker',
+    method: 'post',
+    data
+  })
+}
+
 export function GetOKXConfigList(data) {
   return request({
     url: '/api/OKXConfig/PageList',

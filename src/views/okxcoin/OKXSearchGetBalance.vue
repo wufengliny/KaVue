@@ -53,7 +53,7 @@
 import Kanban from './components/zichan'
 import { GetValuation, GetPositions } from '@/api/okx'
 export default {
-  name: 'OkxcoinMyAccount',
+  name: 'OKXSearchGetBalance',
   components: {
     Kanban
   },

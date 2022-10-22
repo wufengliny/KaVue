@@ -141,25 +141,25 @@ export const katestRoutes = [
     },
     children: [
       {
-        path: 'MyAccount',
-        component: () => import('@/views/okxcoin/MyAccount'),
+        path: 'OKXSearchGetBalance',
+        component: () => import('@/views/okxcoin/OKXSearchGetBalance'),
         name: 'OKXSearchGetBalance',
         hidden: false,
         meta: { title: '我的账户', icon: '', noCache: false }
       },
       {
-        path: 'MyOrder',
-        component: () => import('@/views/okxcoin/MyOrder'),
+        path: 'OKXOrderMyOrder',
+        component: () => import('@/views/okxcoin/OKXOrderMyOrder'),
         name: 'OKXOrderMyOrder',
         hidden: false,
         meta: { title: '交易订单', icon: '', noCache: false } // meta菜单显示信息  不管用
       },
       {
-        path: 'MyOrderHIS',
-        component: () => import('@/views/okxcoin/MyOrderHIS'),
-        name: 'OKXOrderMyOrderHIS',
+        path: 'OKXOrderSearch',
+        component: () => import('@/views/okxcoin/OKXOrderSearch'),
+        name: 'OKXOrderSearch',
         hidden: false,
-        meta: { title: '历史订单', icon: '', noCache: false }
+        meta: { title: '订单查询', icon: '', noCache: false }
       },
       {
         path: 'OKXConfig',
