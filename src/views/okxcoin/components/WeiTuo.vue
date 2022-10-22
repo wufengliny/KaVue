@@ -49,6 +49,11 @@
           <span>{{ scope.row.Profit }}</span>
         </template>
       </el-table-column>
+      <el-table-column align="center" label="创建时间">
+        <template slot-scope="scope">
+          <span>{{ scope.row.AddTime }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
           <el-button v-if="checkbuttonPermission('EatEditOrder')" type="success" size="mini" @click="openEdit(row)">

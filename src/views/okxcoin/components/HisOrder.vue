@@ -12,7 +12,7 @@
           <span>{{ scope.row.InstId }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" width="260" label="订单号">
+      <el-table-column align="center" width="230" label="订单号">
         <template slot-scope="scope">
           <el-tag type="success">
             {{ scope.row.OrderNO }}
@@ -22,17 +22,17 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column align="center" width="100" label="买入价">
+      <el-table-column align="center" width="90" label="买入价">
         <template slot-scope="scope">
           <span>{{ scope.row.INPrice }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" width="100" label="卖出价">
+      <el-table-column align="center" width="90" label="卖出价">
         <template slot-scope="scope">
           <span>{{ scope.row.WhenOut }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" width="100" label="张数">
+      <el-table-column align="center" width="80" label="张数">
         <template slot-scope="scope">
           <span>{{ scope.row.Num }}</span>
         </template>
@@ -52,11 +52,9 @@
           <span>{{ scope.row.Profit }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="{row}">
-          <el-button v-if="checkbuttonPermission('EatEditOrder')" type="success" size="mini" @click="openEdit(row)">
-            撤销挂单
-          </el-button>
+      <el-table-column align="center" label="更新时间">
+        <template slot-scope="scope">
+          <span>{{ scope.row.UpdateTime }}</span>
         </template>
       </el-table-column>
     </el-table>

@@ -12,7 +12,7 @@
           <span>{{ scope.row.InstId }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" width="260" label="订单号">
+      <el-table-column align="center" width="230" label="订单号">
         <template slot-scope="scope">
           <el-tag type="success">
             {{ scope.row.OrderNO }}
@@ -22,17 +22,17 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column align="center" width="100" label="买入价">
+      <el-table-column align="center" width="90" label="买入价">
         <template slot-scope="scope">
           <span>{{ scope.row.INPrice }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" width="100" label="挂出价">
+      <el-table-column align="center" width="90" label="挂出价">
         <template slot-scope="scope">
           <span>{{ scope.row.WhenOut }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" width="100" label="张数">
+      <el-table-column align="center" width="80" label="张数">
         <template slot-scope="scope">
           <span>{{ scope.row.Num }}</span>
         </template>
@@ -55,6 +55,11 @@
       <el-table-column align="center" width="100" label="预计盈利">
         <template slot-scope="scope">
           <span>{{ scope.row.Profit }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="创建时间">
+        <template slot-scope="scope">
+          <span>{{ scope.row.AddTime }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
