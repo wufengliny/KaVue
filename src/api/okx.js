@@ -77,3 +77,17 @@ export function GetOKXOrderMyOrder(data) {
     data
   })
 }
+export function OKXOrderCancel(data) {
+  return request({
+    url: '/api/OKXOrder/Cancel',
+    method: 'post',
+    data
+  })
+}
+export function OKXOrderEdit(data) {
+  return request({
+    url: '/api/OKXOrder/EditOrder',
+    method: 'post',
+    data
+  })
+}

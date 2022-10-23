@@ -5,7 +5,14 @@
         刷新
       </el-button>
     </div>
-    <el-alert :title="'买入手续费：'+ SumInFee+',卖出手续费：'+SumOutFee+',预计盈利：'+SumProfit" type="success" />
+    <el-tag type="success">买入手续费：</el-tag>
+    <el-tag> {{ SumInFee }}</el-tag>
+    <el-tag type="success">卖出手续费：</el-tag>
+    <el-tag> {{ SumOutFee }}</el-tag>
+    <el-tag type="success">预计盈利：</el-tag>
+    <el-tag> {{ SumProfit }}</el-tag>
+    <el-tag type="success">总张数：</el-tag>
+    <el-tag> {{ SumNum }}</el-tag>
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" width="150" label="产品">
         <template slot-scope="scope">
@@ -56,7 +63,7 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
-          <el-button v-if="checkbuttonPermission('EatEditOrder')" type="success" size="mini" @click="openEdit(row)">
+          <el-button v-if="checkbuttonPermission('OKXOrderCancel')" type="danger" size="mini" @click="Cancelorder(row, $index)">
             撤销挂单
           </el-button>
         </template>
@@ -67,9 +74,10 @@
 </template>
 
 <script>
-import { GetOKXOrderMyOrder } from '@/api/okx'
+import { GetOKXOrderMyOrder, OKXOrderCancel } from '@/api/okx'
 import { checkbuttonPermission } from '@/utils/permission'
 import Pagination from '@/components/Pagination'
+import { MessageBox } from 'element-ui'
 export default {
   name: 'OKXOrderMyOrder',
   components: { Pagination },
@@ -86,16 +94,13 @@ export default {
       SumInFee: 0,
       SumOutFee: 0,
       SumProfit: 0,
+      SumNum: 0,
       rules: {
         foodName: [{ required: true, message: '请输入菜名', trigger: 'blur' }]
       },
-      dialogFormVisible: false,
-      activitystatu: false,
-      dialogshou: false,
-      dialogshouData: {
-        seriousNO: 0,
-        eatAcount: '',
-        receiveMoney: 0
+      CamcelData: {
+        instId: '',
+        clOrdId: ''
       },
       summoney: 0,
       timer: ''
@@ -113,13 +118,30 @@ export default {
         this.SumInFee = response.Data.SumData.SumInFee
         this.SumOutFee = response.Data.SumData.SumOutFee
         this.SumProfit = response.Data.SumData.SumProfit
+        this.SumNum = response.Data.SumData.SumNum
         this.total = response.Pageinfo.TotalCount
         this.listLoading = false
       })
     },
     reflashdata() {
       this.getList()
+    },
+    Cancelorder(row, index) {
+      MessageBox.confirm('确定要撤单吗？', '提醒', {
+        type: 'warning'
+      }).then(() => {
+        this.CamcelData.instId = row.InstId
+        this.CamcelData.clOrdId = row.OrderNO
+        OKXOrderCancel(this.CamcelData).then(() => {
+          this.$message({
+            message: '撤单成功',
+            type: 'success'
+          })
+          this.list.splice(index, 1)
+        })
+      }).catch(() => {})
     }
+    //
   }
 }
 </script>

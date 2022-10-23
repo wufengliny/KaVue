@@ -5,7 +5,14 @@
         刷新
       </el-button>
     </div>
-    <el-alert :title="'买入手续费：'+ SumInFee+',卖出手续费：'+SumOutFee+',盈利：'+SumProfit" type="success" />
+    <el-tag type="success">买入手续费：</el-tag>
+    <el-tag> {{ SumInFee }}</el-tag>
+    <el-tag type="success">卖出手续费：</el-tag>
+    <el-tag> {{ SumOutFee }}</el-tag>
+    <el-tag type="success">盈利：</el-tag>
+    <el-tag> {{ SumProfit }}</el-tag>
+    <el-tag type="success">总张数：</el-tag>
+    <el-tag> {{ SumNum }}</el-tag>
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" width="150" label="产品">
         <template slot-scope="scope">
@@ -83,6 +90,7 @@ export default {
       SumInFee: 0,
       SumOutFee: 0,
       SumProfit: 0,
+      SumNum: 0,
       dialogFormVisible: false,
       activitystatu: false,
       dialogshou: false,
@@ -107,6 +115,7 @@ export default {
         this.SumInFee = response.Data.SumData.SumInFee
         this.SumOutFee = response.Data.SumData.SumOutFee
         this.SumProfit = response.Data.SumData.SumProfit
+        this.SumNum = response.Data.SumData.SumNum
         this.total = response.Pageinfo.TotalCount
         this.listLoading = false
       })
