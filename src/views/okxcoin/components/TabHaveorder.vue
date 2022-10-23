@@ -13,7 +13,6 @@
     <el-tag> {{ SumProfit }}</el-tag>
     <el-tag type="success">总张数：</el-tag>
     <el-tag> {{ SumNum }}</el-tag>
-    <el-alert :title="'买入手续费：'+ SumInFee+',卖出手续费：'+SumOutFee+',预计盈利：'+SumProfit" type="success" />
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" width="150" label="产品">
         <template slot-scope="scope">
@@ -189,9 +188,9 @@ export default {
       }).then(() => {
         this.CamcelData.instId = row.InstId
         this.CamcelData.clOrdId = row.OutOrderNO
-        OKXOrderCancel(this.CamcelData).then(() => {
+        OKXOrderCancel(this.CamcelData).then((response) => {
           this.$message({
-            message: '撤单成功',
+            message: response.Message,
             type: 'success'
           })
           this.getList()

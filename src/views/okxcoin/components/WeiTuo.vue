@@ -132,9 +132,9 @@ export default {
       }).then(() => {
         this.CamcelData.instId = row.InstId
         this.CamcelData.clOrdId = row.OrderNO
-        OKXOrderCancel(this.CamcelData).then(() => {
+        OKXOrderCancel(this.CamcelData).then((response) => {
           this.$message({
-            message: '撤单成功',
+            message: response.Message,
             type: 'success'
           })
           this.list.splice(index, 1)
