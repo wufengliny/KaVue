@@ -166,14 +166,14 @@ export const katestRoutes = [
         component: () => import('@/views/okxcoin/OKXConfig'),
         name: 'OKXConfig',
         hidden: false,
-        meta: { title: '交易配置', icon: '', noCache: false }
+        meta: { title: '规则配置', icon: '', noCache: false }
       },
       {
-        path: 'Rank',
-        component: () => import('@/views/okxcoin/Rank'),
-        name: 'EatRank',
+        path: 'OKXBaseConfig',
+        component: () => import('@/views/okxcoin/OKXBaseConfig'),
+        name: 'OKXBaseConfig',
         hidden: false,
-        meta: { title: '榜上英雄', icon: '', noCache: false }
+        meta: { title: '交易配置', icon: '', noCache: false }
       }
     ]
   },

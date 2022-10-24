@@ -27,7 +27,7 @@
 <script>
 import { EatRank } from '@/api/eat'
 export default {
-  name: 'EatRank',
+  name: 'OKXBaseConfig',
   filters: {
     rate(row) {
       let resrate = ''
