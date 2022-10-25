@@ -91,3 +91,31 @@ export function OKXOrderEdit(data) {
     data
   })
 }
+
+export function OKXGetConfigBase() {
+  return request({
+    url: '/api/OKXConfig/GetConfigBase',
+    method: 'post'
+  })
+}
+export function OKXConfigBaseAdd(data) {
+  return request({
+    url: '/api/OKXConfig/ConfigBaseAdd',
+    method: 'post',
+    data
+  })
+}
+export function OKXConfigBaseEdit(data) {
+  return request({
+    url: '/api/OKXConfig/ConfigBaseEdit',
+    method: 'post',
+    data
+  })
+}
+export function OKXConfigBaseDefault(data) {
+  return request({
+    url: '/api/OKXConfig/ConfigBaseDefault',
+    method: 'post',
+    data
+  })
+}

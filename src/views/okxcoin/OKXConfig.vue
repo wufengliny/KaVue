@@ -205,6 +205,7 @@ export default {
     },
     openAdd() {
       this.dialogFormVisible = true
+      this.dialogData.ID = 0
     },
     openEdit(row) {
       this.dialogFormVisible = true
