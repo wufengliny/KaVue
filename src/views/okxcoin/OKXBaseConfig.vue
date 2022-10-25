@@ -16,6 +16,11 @@
           <span>{{ scope.row.TotalNum }}</span>
         </template>
       </el-table-column>
+      <el-table-column align="center" label="比例">
+        <template slot-scope="scope">
+          <span>一单位= {{ scope.row.EqualSZ }} 张</span>
+        </template>
+      </el-table-column>
       <el-table-column align="center" width="180" label="是否默认">
         <template slot-scope="scope">
           <el-switch
@@ -50,6 +55,10 @@
         <el-form-item label="总张数" prop="TotalNum">
           <el-input v-model="dialogData.TotalNum" type="number" />
         </el-form-item>
+        <el-form-item label="比例" prop="EqualSZ">
+          <el-input v-model="dialogData.EqualSZ" type="number" />
+          <el-tag type="success">一个单位产品等于多少张</el-tag>
+        </el-form-item>
         <el-form-item label="备注">
           <el-input v-model="dialogData.Memo" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="备注信息" />
         </el-form-item>
@@ -81,6 +90,7 @@ export default {
         ID: 0,
         TradeProduct: '',
         TotalNum: 0,
+        EqualSZ: 0,
         Memo: ''
       },
       rules: {
@@ -112,6 +122,7 @@ export default {
       this.TradeProductReadonly = true
       this.dialogStatus = 'edit'
       this.dialogData.ID = row.ID
+      this.dialogData.EqualSZ = row.EqualSZ
       this.dialogData.TradeProduct = row.TradeProduct
       this.dialogData.TotalNum = row.TotalNum
       this.dialogData.Memo = row.Memo

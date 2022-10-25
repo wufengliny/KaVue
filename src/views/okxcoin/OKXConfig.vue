@@ -85,7 +85,9 @@
         <el-form-item label="购买张数">
           <el-input v-model="dialogData.InNum" type="number" />
         </el-form-item>
-
+        <el-form-item v-if="dialogData.TradeMode===2" label="参考价">
+          <el-input v-model="dialogData.ReferPrice" type="number" />
+        </el-form-item>
         <el-form-item v-if="dialogData.TradeMode===2" label="跌多少加仓">
           <el-input v-model="dialogData.DownPoint" type="number" />
         </el-form-item>
@@ -162,12 +164,13 @@ export default {
         UPOutPoint: 10,
         AreaDown: 0,
         AreaUP: 0,
-        ID: 0
+        ID: 0,
+        ReferPrice: 0
 
       },
       TradeModes: [
         { 'key': 1, 'name': '模式1', 'tip': '设定一个买入价格，卖出价格，购买张数（=总张数）， 挂单   订单结束后是否重复' },
-        { 'key': 2, 'name': '模式2', 'tip': '获取当前持仓订单的最低价格，如果当前没有仓位，则按最新市价算 每跌破多少 点 购买张数   涨了多少点之后卖出' },
+        { 'key': 2, 'name': '模式2', 'tip': '相对于参考价位每跌多少个点，买入，买入多少张，涨了多少个点之后卖出，设置当前模式的总张数' },
         { 'key': 3, 'name': '模式3', 'tip': '指定价位区间做T  比如13-20  ，低于13买入 高于20卖出  购买张数（=总张数）' }
       ],
       TipTradeMode: '',
@@ -210,6 +213,7 @@ export default {
     openEdit(row) {
       this.dialogFormVisible = true
       this.dialogData.ID = row.ID
+      this.dialogData.ReferPrice = row.ReferPrice
       this.dialogData.TradeMode = row.TradeMode
       this.dialogData.InstId = row.InstId
       this.dialogData.InPrice = row.InPrice
