@@ -1,6 +1,26 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
+      <el-select v-model="listQuery.InstId" class="filter-item" filterable placeholder="">
+        <el-option
+          v-for="item in InstIds"
+          :key="item.TradeProduct"
+          :label="item.TradeProduct"
+          :value="item.TradeProduct"
+        />
+      </el-select>
+      <el-select v-model="listQuery.TradeMode" class="filter-item" filterable placeholder="">
+        <el-option key="-1" label="全部模式" :value="-1" />
+        <el-option
+          v-for="item in TradeModes"
+          :key="item.key"
+          :label="item.name"
+          :value="item.key"
+        />
+      </el-select>
+      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="getList">
+        搜索
+      </el-button>
       <el-button v-if="checkbuttonPermission('OKXConfigAdd')" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="openAdd">
         添加规则
       </el-button>
@@ -67,9 +87,9 @@
           <el-select v-model="dialogData.InstId" class="filter-item" placeholder="请选择">
             <el-option
               v-for="item in InstIds"
-              :key="item.key"
-              :label="item.key"
-              :value="item.key"
+              :key="item.TradeProduct"
+              :label="item.TradeProduct"
+              :value="item.TradeProduct"
             />
           </el-select>
         </el-form-item>
@@ -126,7 +146,7 @@
   </div>
 </template>
 <script>
-import { GetOKXConfigList, OKXConfigAdd, OKXConfigEdit, OKXConfigDelete, OKXConfigEnable } from '@/api/okx'
+import { GetOKXConfigList, OKXConfigAdd, OKXConfigEdit, OKXConfigDelete, OKXConfigEnable, OKXGetConfigBase } from '@/api/okx'
 import { checkbuttonPermission } from '@/utils/permission'
 import { MessageBox } from 'element-ui'
 export default {
@@ -152,6 +172,10 @@ export default {
       rules: {
         Name: [{ required: true, message: '请输入商家名称', trigger: 'blur' }]
       },
+      listQuery: {
+        InstId: '',
+        TradeMode: -1
+      },
       dialogData: {
         TradeMode: 1,
         InstId: 'ETH-USDT-SWAP',
@@ -174,12 +198,11 @@ export default {
         { 'key': 3, 'name': '模式3', 'tip': '指定价位区间做T  比如13-20  ，低于13买入 高于20卖出  购买张数（=总张数）' }
       ],
       TipTradeMode: '',
-      InstIds: [
-        { 'key': 'ETH-USDT-SWAP' }
-      ]
+      InstIds: null
     }
   },
   created() {
+    this.getProducts()
     this.getList()
     this.TipTradeMode = this.TradeModes.filter(x => x.key === this.dialogData.TradeMode)[0].tip
   },
@@ -187,7 +210,7 @@ export default {
     checkbuttonPermission,
     getList() {
       this.listLoading = true
-      GetOKXConfigList().then(response => {
+      GetOKXConfigList(this.listQuery).then(response => {
         this.list = response.Data
         this.listLoading = false
       })
@@ -264,6 +287,16 @@ export default {
           this.list.splice(index, 1)
         })
       }).catch(() => {})
+    },
+    getProducts() {
+      OKXGetConfigBase().then(response => {
+        this.InstIds = response.Data
+        var selected = response.Data.filter(x => x.IsDefault)
+        if (selected.length !== 0) {
+          this.listQuery.InstId = selected[0].TradeProduct
+          this.dialogData.InstId = selected[0].TradeProduct
+        }
+      })
     }
 
   }

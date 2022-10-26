@@ -119,3 +119,17 @@ export function OKXConfigBaseDefault(data) {
     data
   })
 }
+export function GetOKXTradeMsg(data) {
+  return request({
+    url: '/api/OKXSearch/OKXTradeMsg',
+    method: 'post',
+    data
+  })
+}
+
+export function GetCurrentproduct() {
+  return request({
+    url: '/api/OKXConfig/GetCurrentproduct',
+    method: 'post'
+  })
+}

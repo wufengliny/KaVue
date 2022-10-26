@@ -118,7 +118,7 @@
 </template>
 
 <script>
-import { GetOKXOrderMyOrder, GetTicker, OKXOrderCancel, OKXOrderEdit } from '@/api/okx'
+import { GetOKXOrderMyOrder, GetTicker, OKXOrderCancel, OKXOrderEdit, GetCurrentproduct } from '@/api/okx'
 import { checkbuttonPermission } from '@/utils/permission'
 import Pagination from '@/components/Pagination'
 import { MessageBox } from 'element-ui'
@@ -151,7 +151,9 @@ export default {
         instId: '',
         clOrdId: '',
         WhenOut: 0
-      }
+      },
+      CurrentProduct: ''
+
     }
   },
   created() {
@@ -173,9 +175,18 @@ export default {
       })
     },
     getTicket() {
-      this.listLoading = true
-      GetTicker({ Txt: 'ETH-USDT-SWAP' }).then(response => {
-        this.nowprice = response.Data.data[0].last
+      if (!this.CurrentProduct) {
+        GetCurrentproduct().then(response => {
+          this.CurrentProduct = response.Data
+          GetTicker({ Txt: this.CurrentProduct }).then(response => {
+            this.nowprice = response.Data.data[0].last
+          })
+        })
+      }
+    },
+    getcurrentPro() {
+      GetCurrentproduct().then(response => {
+        this.CurrentProduct = response.Data
       })
     },
     reflashdata() {

@@ -173,7 +173,14 @@ export const katestRoutes = [
         component: () => import('@/views/okxcoin/OKXBaseConfig'),
         name: 'OKXBaseConfig',
         hidden: false,
-        meta: { title: '交易配置', icon: '', noCache: false }
+        meta: { title: '产品配置', icon: '', noCache: false }
+      },
+      {
+        path: 'OKXTradeMsg',
+        component: () => import('@/views/okxcoin/OKXTradeMsg'),
+        name: 'OKXTradeMsg',
+        hidden: false,
+        meta: { title: '交易信息', icon: '', noCache: false }
       }
     ]
   },
