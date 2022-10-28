@@ -89,3 +89,10 @@ export function CPOpenResultDelete(data) {
     data
   })
 }
+
+export function GameTypeList() {
+  return request({
+    url: '/api/Game/CPGameTypeList',
+    method: 'post'
+  })
+}

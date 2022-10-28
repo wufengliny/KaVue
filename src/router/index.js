@@ -270,7 +270,7 @@ export const katestRoutes = [
     component: Layout,
     hidden: true,
     meta: {
-      title: '彩票管理',
+      title: '游戏管理',
       icon: 'example'
     },
     children: [
@@ -294,6 +294,13 @@ export const katestRoutes = [
         name: 'GameCPOpenResult',
         hidden: true,
         meta: { title: '彩票开奖结果', icon: '' } // meta菜单显示信息
+      },
+      {
+        path: 'gametype',
+        component: () => import('@/views/game/gametype'),
+        name: 'CPGameTypeList',
+        hidden: true,
+        meta: { title: '游戏分类管理', icon: '' } // meta菜单显示信息
       }
     ]
   },
