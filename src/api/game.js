@@ -96,3 +96,26 @@ export function GameTypeList() {
     method: 'post'
   })
 }
+
+export function GameTypeGameList(data) {
+  return request({
+    url: '/api/Game/GameTypeGameList',
+    method: 'post',
+    data
+  })
+}
+export function GameTypeGameAdd(data) {
+  return request({
+    url: '/api/Game/GameTypeGameAdd',
+    method: 'post',
+    data
+  })
+}
+
+export function GameTypeGameDelete(data) {
+  return request({
+    url: '/api/Game/GameTypeGameDelete',
+    method: 'post',
+    data
+  })
+}
