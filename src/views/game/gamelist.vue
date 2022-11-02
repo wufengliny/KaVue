@@ -1,5 +1,18 @@
 <template>
   <div class="app-container">
+    <div class="filter-container">
+      <el-select v-model="listQuery.GameTypeID" class="filter-item" filterable placeholder="">
+        <el-option
+          v-for="item in GameTypes"
+          :key="item.ID"
+          :label="item.Name"
+          :value="item.ID"
+        />
+      </el-select>
+      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="getdata">
+        搜索
+      </el-button>
+    </div>
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" label="ID" width="80">
         <template slot-scope="scope">
@@ -8,7 +21,7 @@
       </el-table-column>
       <el-table-column align="center" label="名称">
         <template slot-scope="scope">
-          <span>{{ scope.row.Name }}</span>
+          <span>{{ scope.row.GameName }}</span>
         </template>
       </el-table-column>
       <el-table-column class-name="status-col" label="状态" width="180">
@@ -81,7 +94,7 @@
   </div>
 </template>
 <script>
-import { gamelist, SetOpenClose, GameEdit } from '@/api/game'
+import { gamelist, SetOpenClose, GameEdit, GameTypeList } from '@/api/game'
 import { checkbuttonPermission } from '@/utils/permission'
 export default {
   name: 'GameList',
@@ -119,6 +132,10 @@ export default {
     return {
       list: null,
       listLoading: false,
+      listQuery: {
+        GameTypeID: 1
+      },
+      GameTypes: null,
       dialogFormVisible: false,
       dateclearable: false,
       statuinfo: {
@@ -134,14 +151,21 @@ export default {
     }
   },
   created() {
+    this.getGameTypes()
     this.getdata()
   },
   methods: {
     getdata() {
       this.listLoading = true
-      gamelist().then(response => {
+      console.log(this.listQuery)
+      gamelist(this.listQuery).then(response => {
         this.list = response.Data
         this.listLoading = false
+      })
+    },
+    getGameTypes() {
+      GameTypeList().then(response => {
+        this.GameTypes = response.Data
       })
     },
     checkbuttonPermission,

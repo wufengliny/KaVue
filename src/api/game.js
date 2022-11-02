@@ -1,9 +1,10 @@
 import request from '@/utils/request'
 
-export function gamelist() {
+export function gamelist(data) {
   return request({
     url: '/api/game/list',
-    method: 'post'
+    method: 'post',
+    data
   })
 }
 export function GetGamesFromCache() {
