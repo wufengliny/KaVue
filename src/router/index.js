@@ -208,6 +208,13 @@ export const katestRoutes = [
         name: 'PowerAdmingroup',
         hidden: false,
         meta: { title: '管理员组', icon: '', noCache: false }
+      },
+      {
+        path: 'PowerAdminWhiteIP',
+        component: () => import('@/views/power/PowerAdminWhiteIP'),
+        name: 'PowerAdminWhiteIP',
+        hidden: false,
+        meta: { title: 'IP白名单', icon: '', noCache: false }
       }
     ]
   },

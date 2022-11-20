@@ -142,3 +142,35 @@ export function GetAdminGoogleTwo(data) {
     data
   })
 }
+
+export function GetAdminWhiteIP(data) {
+  return request({
+    url: '/api/AdminWhiteIP/PageList',
+    method: 'post',
+    data
+  })
+}
+
+export function AdminWhiteIPAdd(data) {
+  return request({
+    url: '/api/AdminWhiteIP/AdminWhiteIPAdd',
+    method: 'post',
+    data
+  })
+}
+
+export function AdminWhiteIPEdit(data) {
+  return request({
+    url: '/api/AdminWhiteIP/AdminWhiteIPEdit',
+    method: 'post',
+    data
+  })
+}
+
+export function AdminWhiteIPDelete(data) {
+  return request({
+    url: '/api/AdminWhiteIP/AdminWhiteIPDelete',
+    method: 'post',
+    data
+  })
+}
