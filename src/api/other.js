@@ -20,3 +20,16 @@ export function GetAdminInfo(data) {
   })
 }
 
+export function OperateLogType(ControllerName) {
+  return request({
+    url: '/api/' + ControllerName + '/OperateLogType',
+    method: 'post'
+  })
+}
+export function OperateLog(data, ControllerName) {
+  return request({
+    url: '/api/' + ControllerName + '/OperateLog',
+    method: 'post',
+    data
+  })
+}

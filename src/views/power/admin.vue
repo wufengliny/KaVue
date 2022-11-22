@@ -8,7 +8,7 @@
       <el-button v-if="checkbuttonPermission('PowerAdminAdd')" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreate">
         添加
       </el-button>
-      <el-button v-if="checkbuttonPermission('PowerAdminOperateLog')" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-document" @click="OpendialogLog">
+      <el-button v-if="checkbuttonPermission('PowerAdminOperateLog')" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-document" @click="DialogLog.showlog = true">
         操作日志
       </el-button>
     </div>
@@ -105,8 +105,9 @@
       @hidedialoggoogle="hidedialoggoogle"
     />
     <operatelog
-      :showgoogledialog.sync="dialogOperateLog.showlog"
-      @hidedialoOperateLog="hidedialoOperateLog"
+      :showlog.sync="DialogLog.showlog"
+      :controller-name="DialogLog.ControllerName"
+      @HideDialogLog="HideDialogLog"
     />
   </div>
 </template>
@@ -170,8 +171,9 @@ export default {
         showgoogledialog: false,
         adminID: 0
       },
-      dialogOperateLog: {
-        showlog: false
+      DialogLog: {
+        showlog: false,
+        ControllerName: 'Admin'
       }
     }
   },
@@ -290,11 +292,8 @@ export default {
     hidedialoggoogle() {
       this.dialogGooglepropData.showgoogledialog = false
     },
-    OpendialogLog() {
-      this.dialogOperateLog.showlog = true
-    },
-    hidedialoOperateLog() {
-      this.dialogOperateLog.showlog = false
+    HideDialogLog() {
+      this.DialogLog.showlog = false
     },
     resetTemp() {
       this.temp = {
@@ -304,9 +303,6 @@ export default {
         memo: '',
         adminGroupID: ''
       }
-    },
-    openOperateLog() {
-
     },
     checkbuttonPermission
   }
