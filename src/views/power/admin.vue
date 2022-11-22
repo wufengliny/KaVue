@@ -8,6 +8,9 @@
       <el-button v-if="checkbuttonPermission('PowerAdminAdd')" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreate">
         添加
       </el-button>
+      <el-button v-if="checkbuttonPermission('PowerAdminOperateLog')" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-document" @click="OpendialogLog">
+        操作日志
+      </el-button>
     </div>
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" label="ID" width="80">
@@ -101,6 +104,10 @@
       :adminid="dialogGooglepropData.adminID"
       @hidedialoggoogle="hidedialoggoogle"
     />
+    <operatelog
+      :showgoogledialog.sync="dialogOperateLog.showlog"
+      @hidedialoOperateLog="hidedialoOperateLog"
+    />
   </div>
 </template>
 <script>
@@ -108,10 +115,11 @@ import { fetchadminList, fetchadminGroupALL, addAdminAccount, updateAdminAccount
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import { MessageBox } from 'element-ui'
 import Google from './components/Google'
+import operatelog from '../pubcompents/operatelog'
 import { checkbuttonPermission } from '@/utils/permission'
 export default {
   name: 'PowerAdmin',
-  components: { Pagination, Google },
+  components: { Pagination, Google, operatelog },
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -161,6 +169,9 @@ export default {
       dialogGooglepropData: {
         showgoogledialog: false,
         adminID: 0
+      },
+      dialogOperateLog: {
+        showlog: false
       }
     }
   },
@@ -279,6 +290,12 @@ export default {
     hidedialoggoogle() {
       this.dialogGooglepropData.showgoogledialog = false
     },
+    OpendialogLog() {
+      this.dialogOperateLog.showlog = true
+    },
+    hidedialoOperateLog() {
+      this.dialogOperateLog.showlog = false
+    },
     resetTemp() {
       this.temp = {
         id: 0,
@@ -287,6 +304,9 @@ export default {
         memo: '',
         adminGroupID: ''
       }
+    },
+    openOperateLog() {
+
     },
     checkbuttonPermission
   }

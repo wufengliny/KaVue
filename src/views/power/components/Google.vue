@@ -1,6 +1,6 @@
 <template>
   <el-dialog title="谷歌验证码秘钥配置" :visible.sync="showgoogledialog" :before-close="hidedialog">
-    <el-form ref="dialogForm" :model="googledata" label-position="left" label-width="90px" style="width: 650px; margin-left:50px;">
+    <el-form ref="dialogForm" :model="googledata" label-position="left" label-width="90px" style="width: 400px; margin-left:50px;">
       <el-form-item label="标题" prop="title">
         <el-input v-model="googledata.title" @change="nameChangemMakekey" />
       </el-form-item>

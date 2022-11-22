@@ -174,3 +174,17 @@ export function AdminWhiteIPDelete(data) {
     data
   })
 }
+
+export function OperateLogType() {
+  return request({
+    url: '/api/Admin/OperateLogType',
+    method: 'post'
+  })
+}
+export function OperateLog(data) {
+  return request({
+    url: '/api/Admin/OperateLog',
+    method: 'post',
+    data
+  })
+}
