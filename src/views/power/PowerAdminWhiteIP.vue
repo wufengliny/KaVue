@@ -8,6 +8,9 @@
       <el-button v-if="checkbuttonPermission('PowerAdminWhiteIPAdd')" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreate">
         添加
       </el-button>
+      <el-button v-if="checkbuttonPermission('PowerAdminWhiteIPOperateLog')" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-document" @click="DialogLog.showlog = true">
+        操作日志
+      </el-button>
     </div>
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" label="ID" width="80">
@@ -61,6 +64,11 @@
         </el-button>
       </div>
     </el-dialog>
+    <operatelog
+      :showlog.sync="DialogLog.showlog"
+      :controller-name="DialogLog.ControllerName"
+      @HideDialogLog="HideDialogLog"
+    />
   </div>
 </template>
 <script>
@@ -68,9 +76,10 @@ import { GetAdminWhiteIP, AdminWhiteIPAdd, AdminWhiteIPEdit, AdminWhiteIPDelete 
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import { MessageBox } from 'element-ui'
 import { checkbuttonPermission } from '@/utils/permission'
+import operatelog from '../pubcompents/operatelog'
 export default {
   name: 'PowerAdminWhiteIP',
-  components: { Pagination },
+  components: { Pagination, operatelog },
   data() {
     return {
       list: null,
@@ -113,6 +122,10 @@ export default {
       menupowerpostdata: {
         adminGroupID: 0,
         menuIDs: []
+      },
+      DialogLog: {
+        showlog: false,
+        ControllerName: 'AdminWhiteIP'
       }
     }
   },
@@ -203,6 +216,9 @@ export default {
         IP: '',
         Memo: ''
       }
+    },
+    HideDialogLog() {
+      this.DialogLog.showlog = false
     }
   }
 }

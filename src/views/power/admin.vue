@@ -56,10 +56,10 @@
           <el-button v-if="checkbuttonPermission('PowerAdminEdit')" type="primary" size="mini" @click="handleUpdate(row)">
             编辑
           </el-button>
-          <el-button v-if="checkbuttonPermission('PowerAdminEnable')&&row.Enable === 2" size="mini" type="success" @click="updateEnable(row, 1)">
+          <el-button v-if="checkbuttonPermission('PowerAdminEnable')&&row.Enable === false" size="mini" type="success" @click="updateEnable(row, true)">
             启用
           </el-button>
-          <el-button v-if="checkbuttonPermission('PowerAdminEnable')&&row.Enable === 1" size="mini" type="info" @click="updateEnable(row, 2)">
+          <el-button v-if="checkbuttonPermission('PowerAdminEnable')&&row.Enable === true" size="mini" type="info" @click="updateEnable(row, false)">
             禁用
           </el-button>
           <el-button v-if="checkbuttonPermission('PowerAdminDelete')" size="mini" type="danger" @click="deleteData(row, $index)">
