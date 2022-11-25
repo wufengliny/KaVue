@@ -33,3 +33,11 @@ export function OperateLog(data, ControllerName) {
     data
   })
 }
+
+export function ClearCache(data) {
+  return request({
+    url: '/api/other/ClearCache',
+    method: 'post',
+    data
+  })
+}

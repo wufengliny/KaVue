@@ -27,11 +27,6 @@
       </template>
     </el-table-column>
 
-    <el-table-column label="备 注">
-      <template slot-scope="{row}">
-        <span>{{ row.Memo }}</span>
-      </template>
-    </el-table-column>
     <!-- <el-table-column sortable="custom" prop="SortField" label="排序">
       <template slot-scope="{row}">
         <span>{{ row.SortField }}</span>
@@ -40,7 +35,7 @@
     <el-table-column min-width="300px" label="值">
       <template slot-scope="{row}">
         <el-tag v-if="row.DataType==='Bool'" :type="row.TValue | statusFilter">
-          {{ statuinfo[row.TValue] }}
+          {{ row | boolValue }}
         </el-tag>
         <template v-else-if="row.DataType==='String'&&row.edit">
           <el-input v-model="row.TValue" class="edit-input" type="text" size="small" maxlength="30" show-word-limit />
@@ -73,6 +68,11 @@
           </el-button>
         </template>
         <span v-else>{{ row.TValue }}</span>
+      </template>
+    </el-table-column>
+    <el-table-column label="备 注">
+      <template slot-scope="{row}">
+        <span>{{ row.Memo }}</span>
       </template>
     </el-table-column>
     <el-table-column label="操作" align="center" width="300" class-name="small-padding fixed-width">
@@ -120,6 +120,13 @@ export default {
         '0': 'danger'
       }
       return statusMap[status]
+    },
+    boolValue(row) {
+      if (row.TValue === '0') {
+        return row.ValueMemo.split('|')[0]
+      } else {
+        return row.ValueMemo.split('|')[1]
+      }
     }
   },
   data() {

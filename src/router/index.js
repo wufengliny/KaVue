@@ -98,6 +98,7 @@ export const constantRoutes = [
     ]
   }
 ]
+// name ：要和mark 一致才会显示，和页面name 一致才会缓存
 // hidden：bool 是否显示在菜单栏
 // affix:  bool 标签栏是否固定 即打开后该导航的右边是否会有一个*关掉的小按钮
 // redirect:面包屑导航中点击跳转的地址
@@ -256,9 +257,10 @@ export const katestRoutes = [
     path: '/config',
     name: 'Config',
     component: Layout,
+    redirect: '/config/sysconfig',
     hidden: false,
     meta: {
-      title: '参数配置',
+      title: '系统设置',
       icon: 'nested'
     },
     children: [
@@ -267,7 +269,14 @@ export const katestRoutes = [
         component: () => import('@/views/config/sysconfig'),
         name: 'ConfigSysConfig',
         hidden: false,
-        meta: { title: '系统参数', icon: '' } // meta菜单显示信息
+        meta: { title: '参数配置', icon: '' } // meta菜单显示信息
+      },
+      {
+        path: 'SysCache',
+        component: () => import('@/views/config/SysCache'),
+        name: 'SysCache',
+        hidden: false,
+        meta: { title: '系统缓存', icon: '' } // meta菜单显示信息
       }
     ]
   },

@@ -2,10 +2,10 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input v-model="listQuery.operaterAccount" placeholder="账号" style="width: 160px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-input v-model="listQuery.APIInfo" placeholder="路由模糊查询" style="width: 160px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <!-- <el-input v-model="listQuery.APIInfo" placeholder="路由模糊查询" style="width: 160px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-select v-model="listQuery.APIType" style="width: 160px" class="filter-item">
         <el-option v-for="item in chkapitype" :key="item.key" :label="item.label" :value="item.key" />
-      </el-select>
+      </el-select> -->
       <el-input v-model="listQuery.clientIP" placeholder="IP" style="width: 160px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-date-picker v-model="listQuery.initTime_begin" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" class="filter-item" placeholder="开始时间" /> ~
       <el-date-picker v-model="listQuery.initTime_end" value-format="yyyy-MM-dd 23:59:59" format="yyyy-MM-dd 23:59:59" type="datetime" class="filter-item" placeholder="结束时间" />
@@ -31,14 +31,14 @@
           <span>{{ scope.row.InitTime | formatTime('{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="操作路由">
+      <el-table-column align="center" label="请求接口">
         <template slot-scope="scope">
-          <span>{{ scope.row.APIInfo }}</span>
+          <span>{{ scope.row.RequestUrl }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="操作类型">
+      <el-table-column align="center" label="浏览器">
         <template slot-scope="scope">
-          <span>{{ chkapitype.find((item) => item.key==scope.row.APIType).label }}</span>
+          <span>{{ scope.row.RequestBrowser }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" width="200px" label="IP">
@@ -155,9 +155,9 @@ export default {
           { key: '请求时间', con: response.Data.AddTime },
           { key: 'RefererUrl', con: response.Data.RefererUrl },
           { key: '请求API', con: response.Data.RequestUrl },
-          { key: '操作路由', con: response.Data.APIInfo },
+          // { key: '操作路由', con: response.Data.APIInfo },
           { key: '浏览器', con: response.Data.RequestBrowser },
-          { key: '项目', con: response.Data.Project },
+          // { key: '项目', con: response.Data.Project },
           { key: 'UserAgent', con: response.Data.RequestUserAgent },
           { key: 'SeriesGUID', con: response.Data.SeriesGUID },
           { key: '请求数据', con: response.Data.RequestData }

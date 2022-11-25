@@ -136,10 +136,10 @@ export default {
           children: 'children',
           label: 'label'
         },
-        checkStrictly: false,
-        chkeddata: [],
-        expandedID: [],
-        powers: []
+        checkStrictly: false, // 在显示复选框的情况下，是否严格的遵循父子不互相关联的做法，默认为 false
+        chkeddata: [], // 选中的数据
+        expandedID: [], // 默认展开的节点的 key 的数组
+        powers: [] // 全部数据
       },
       menuRequestdata: {
         adminGroupID: 0
@@ -268,6 +268,11 @@ export default {
             for (let i2 = 0; i2 < childPage.length; i2++) {
               const temppage = { ID: childPage[i2].ID, label: childPage[i2].Name, children: [] }
               const cbuttons = menus.filter(x => x.ParentID === childPage[i2].ID)
+              //
+              // if(childPage[i2].MenuType==='Page'){
+              //   const FackButton={ ID: childPage[i2].ID+999, label: '页面数据', children: [] }
+              // }
+              //
               if (cbuttons.length > 0) {
                 for (let i3 = 0; i3 < cbuttons.length; i3++) {
                   const tempButton = { ID: cbuttons[i3].ID, label: cbuttons[i3].Name, children: [] }

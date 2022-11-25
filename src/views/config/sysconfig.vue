@@ -1,5 +1,10 @@
 <template>
   <div class="tab-container">
+    <div class="filter-container">
+      <el-button v-if="checkbuttonPermission('ConfigOperateLog')" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-document" @click="DialogLog.showlog = true">
+        操作日志
+      </el-button>
+    </div>
     <el-tabs v-model="activeName" style="margin-top:15px;" type="border-card">
       <el-tab-pane v-for="item in tabMapOptions" :key="item.key" :label="item.label" :name="item.key">
         <keep-alive>
@@ -7,15 +12,21 @@
         </keep-alive>
       </el-tab-pane>
     </el-tabs>
+    <operatelog
+      :showlog.sync="DialogLog.showlog"
+      :controller-name="DialogLog.ControllerName"
+      @HideDialogLog="HideDialogLog"
+    />
   </div>
 </template>
 
 <script>
 import TabPane from './components/TabPane'
-
+import operatelog from '../pubcompents/operatelog'
+import { checkbuttonPermission } from '@/utils/permission'
 export default {
-  name: 'Tab',
-  components: { TabPane },
+  name: 'ConfigSysConfig',
+  components: { TabPane, operatelog },
   data() {
     return {
       tabMapOptions: [
@@ -24,7 +35,11 @@ export default {
         { label: '测试', key: 'TestConfig' }
       ],
       activeName: 'SafeConfig',
-      createdTimes: 0 // 加载次数
+      createdTimes: 0, // 加载次数
+      DialogLog: {
+        showlog: false,
+        ControllerName: 'Config'
+      }
     }
   },
   watch: {
@@ -45,7 +60,11 @@ export default {
   methods: {
     showCreatedTimes() {
       this.createdTimes = this.createdTimes + 1
-    }
+    },
+    HideDialogLog() {
+      this.DialogLog.showlog = false
+    },
+    checkbuttonPermission
   }
 }
 </script>

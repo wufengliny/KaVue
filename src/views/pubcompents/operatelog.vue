@@ -9,7 +9,7 @@
     >
       <div class="app-container">
         <div class="filter-container">
-          <el-select v-model="listQuery.LogType" class="filter-item">
+          <el-select v-model="listQuery.LogType" class="filter-item" style="width:235px;">
             <el-option key="0" label="全部" value="0" />
             <el-option
               v-for="item in logTypes"
@@ -43,7 +43,7 @@
               <span>{{ scope.row.ID }}</span>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="类型" width="140">
+          <el-table-column align="center" label="类型" width="210">
             <template slot-scope="scope">
               <span>{{ scope.row.LogType | typeFilter(logTypes) }}</span>
             </template>
@@ -65,7 +65,7 @@
           </el-table-column>
           <el-table-column align="center" label="内容">
             <template slot-scope="scope">
-              <div>
+              <div class="txtmessage">
                 <svg-icon icon-class="search" @click="showDetailMsg(scope.row.Message)" />
                 <span>{{ scope.row.Message }}</span>
               </div>
@@ -120,7 +120,7 @@ export default {
   data() {
     return {
       total: 0,
-      listLoading: true,
+      listLoading: false,
       logTypes: null,
       list: null,
       listQuery: {
@@ -135,10 +135,21 @@ export default {
     }
   },
   watch: {
+    showlog(cur) {
+      if (cur) {
+        if (this.logTypes === null) {
+          this.getlogTypes()
+        }
+        this.getList()
+      }
+    }
   },
   created() {
-    this.getlogTypes()
-    this.getList()
+    // 这里不能在这里直接查询，否则在主页面还未点击按钮弹出的时候，就开始执行了，如果没有权限会提示权限不足
+    // if (showlog) {
+    //   this.getlogTypes()
+    //   this.getList()
+    // }
   },
   methods: {
     hidedialog() {
@@ -169,5 +180,12 @@ export default {
 }
 </script>
 <style>
-
+/* 文字过长显示省略号 */
+.txtmessage {
+  overflow: hidden;
+  width: 500px;  /* 一定要加宽度 */
+  text-overflow: ellipsis;   /* 溢出用省略号  */
+  white-space: nowrap;  /*  溢出不换行 */
+  text-align: left;
+}
 </style>
